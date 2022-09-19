@@ -28,7 +28,7 @@ public class Bem {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
-    Pessoa pessoa;
+    Usuario usuario;
 
     @Override
     public boolean equals(Object o) {

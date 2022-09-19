@@ -1,16 +1,16 @@
 package br.ufc.nuvem.patrimoniomanager.model.DTO;
 
-import br.ufc.nuvem.patrimoniomanager.model.Pessoa;
+import br.ufc.nuvem.patrimoniomanager.model.Usuario;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class PessoaDTO {
+public class UsuarioDTO {
 
     @JsonProperty("name")
     String nome;
-    public Pessoa toPessoa(){
-      return Pessoa.builder().nome(nome).build();
+    public Usuario toUsuario(){
+      return Usuario.builder().nome(nome).build();
     }
 }
 

@@ -15,7 +15,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Pessoa {
+public class Usuario {
     @Id
     @NonNull
     Long id;
@@ -33,8 +33,8 @@ public class Pessoa {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Pessoa pessoa = (Pessoa) o;
-        return id != null && Objects.equals(id, pessoa.id);
+        Usuario usuario = (Usuario) o;
+        return id != null && Objects.equals(id, usuario.id);
     }
 
     @Override

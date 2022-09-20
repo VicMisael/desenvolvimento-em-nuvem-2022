@@ -15,27 +15,28 @@ import java.util.Objects;
 @Entity
 public class Bem {
     @Id
-    Long id;
+    Long codArquivo;
 
     @Column(name = "nome")
     String nome;
-
-    @Enumerated(EnumType.ORDINAL)
-    Tipo tipo;
 
     @Column(name = "dirImageBem")
     String dirImagemBem;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
+    Long usuarioId;
+
+    @Transient
     Usuario usuario;
+
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Bem bem = (Bem) o;
-        return id != null && Objects.equals(id, bem.id);
+        return codArquivo != null && Objects.equals(codArquivo, bem.codArquivo);
     }
 
     @Override

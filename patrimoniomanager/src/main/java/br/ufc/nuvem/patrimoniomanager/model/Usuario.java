@@ -18,13 +18,19 @@ import java.util.Objects;
 public class Usuario {
     @Id
     @NonNull
-    Long id;
+    Long codigoUsuario;
 
-    @Column(name = "name",unique = true,nullable = false)
+    @Column(name = "nomeCompleto",nullable = false)
     String nome;
 
-    @Column(name = "imageUsuario",unique = true,nullable = true)
-    String imgUsuario;
+    @Column(name = "email",nullable = false)
+    String email;
+
+    @Column(name="indentificacao",unique = true)
+    String identificacao;
+
+    @Column(name="senha")
+    String senha;
 
     @OneToMany(targetEntity = Bem.class, cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     List<Bem> bens = new ArrayList<>();
@@ -34,7 +40,7 @@ public class Usuario {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Usuario usuario = (Usuario) o;
-        return id != null && Objects.equals(id, usuario.id);
+        return codigoUsuario != null && Objects.equals(codigoUsuario, usuario.codigoUsuario);
     }
 
     @Override

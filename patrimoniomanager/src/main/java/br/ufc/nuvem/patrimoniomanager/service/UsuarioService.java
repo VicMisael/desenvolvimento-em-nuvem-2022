@@ -36,7 +36,7 @@ public class UsuarioService {
     }
 
     public Usuario update(Usuario usuario) {
-        if (pessoaRepository.existsById(usuario.getId())) {
+        if (pessoaRepository.existsById(usuario.getCodigoUsuario())) {
             return pessoaRepository.save(usuario);
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Update without ID");

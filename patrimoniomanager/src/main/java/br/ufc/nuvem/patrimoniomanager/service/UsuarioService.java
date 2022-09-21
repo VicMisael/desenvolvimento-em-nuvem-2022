@@ -1,5 +1,6 @@
 package br.ufc.nuvem.patrimoniomanager.service;
 
+import br.ufc.nuvem.patrimoniomanager.model.Bem;
 import br.ufc.nuvem.patrimoniomanager.model.Usuario;
 import br.ufc.nuvem.patrimoniomanager.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,39 +13,40 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 public class UsuarioService {
-
-    private final S3Service s3Service;
-    private final UsuarioRepository pessoaRepository;
+    private final UsuarioRepository usuarioRepository
+            ;
 
     public Usuario save(Usuario usuario) {
-        return pessoaRepository.save(usuario);
+        return usuarioRepository.save(usuario);
     }
 
     public Optional<Usuario> find(Long id) {
-       return pessoaRepository.findById(id);
+       return usuarioRepository.findById(id);
     }
 
     public List<Usuario> find() {
         List<Usuario> usuarios = new ArrayList<>();
-        pessoaRepository.findAll().forEach(usuarios::add);
+        usuarioRepository.findAll().forEach(usuarios::add);
         return usuarios;
     }
 
 
     public void delete(Long id) {
-        pessoaRepository.deleteById(id);
+        usuarioRepository.deleteById(id);
     }
 
     public Usuario update(Usuario usuario) {
-        if (pessoaRepository.existsById(usuario.getCodigoUsuario())) {
-            return pessoaRepository.save(usuario);
+        if (usuarioRepository.existsById(usuario.getCodigoUsuario())) {
+            return usuarioRepository.save(usuario);
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Update without ID");
-
     }
 
-    public void insertPhoto(Usuario usuario) {
-
+    public List<Bem> findUsuarioBemList(Long id){
+       Optional<Usuario> usuario= usuarioRepository.findById(id);
+        if(usuario.isPresent()){
+            return usuario.get().getBens();
+        }
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not Found");
     }
-
 }

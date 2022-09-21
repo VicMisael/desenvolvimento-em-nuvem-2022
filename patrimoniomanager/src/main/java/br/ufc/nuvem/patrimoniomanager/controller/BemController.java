@@ -1,4 +1,10 @@
 package br.ufc.nuvem.patrimoniomanager.controller;
 
-public class BemController {
+
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class BemController
+{
+
 }

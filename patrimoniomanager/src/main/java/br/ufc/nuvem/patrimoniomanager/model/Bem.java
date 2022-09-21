@@ -10,6 +10,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@Builder
 @RequiredArgsConstructor
 @Table(name = "bem")
 @Entity
@@ -25,10 +26,8 @@ public class Bem {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
-    Long usuarioId;
-
-    @Transient
     Usuario usuario;
+
 
 
     @Override

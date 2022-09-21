@@ -2,6 +2,7 @@ package br.ufc.nuvem.patrimoniomanager.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.Hibernate;
 
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class Usuario {
     String senha;
 
     @OneToMany(targetEntity = Bem.class, cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @JsonIgnore
     List<Bem> bens = new ArrayList<>();
 
     @Override

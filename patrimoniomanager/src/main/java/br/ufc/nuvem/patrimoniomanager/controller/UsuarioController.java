@@ -3,7 +3,6 @@ package br.ufc.nuvem.patrimoniomanager.controller;
 import br.ufc.nuvem.patrimoniomanager.model.DTO.UsuarioDTO;
 import br.ufc.nuvem.patrimoniomanager.model.Usuario;
 import br.ufc.nuvem.patrimoniomanager.service.UsuarioService;
-import br.ufc.nuvem.patrimoniomanager.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,11 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@RestController
+@RestController("/user")
 @RequiredArgsConstructor
 public class UsuarioController {
     private final UsuarioService usuarioService;
-    private final S3Service s3Service;
 
     @PostMapping
     public ResponseEntity<Usuario> insertPessoa(@RequestParam UsuarioDTO usuarioDTO) {

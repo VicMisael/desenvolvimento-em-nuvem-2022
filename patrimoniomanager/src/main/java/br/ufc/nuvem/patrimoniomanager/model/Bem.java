@@ -1,33 +1,33 @@
 package br.ufc.nuvem.patrimoniomanager.model;
 
-import jakarta.persistence.*;
 import lombok.*;
 import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.Hibernate;
 
+import javax.persistence.*;
 import java.util.Objects;
 
 @Getter
 @Setter
-@ToString
 @Builder
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "bem")
 @Entity
 public class Bem {
     @Id
-    Long codArquivo;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long codArquivo;
 
     @Column(name = "nome")
-    String nome;
+    private String nome;
 
     @Column(name = "dirImageBem")
-    String dirImagemBem;
+    private String dirImagemBem;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
-    Usuario usuario;
-
+    private Usuario usuario;
 
 
     @Override

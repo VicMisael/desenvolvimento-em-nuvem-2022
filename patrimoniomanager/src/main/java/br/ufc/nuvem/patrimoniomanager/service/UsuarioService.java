@@ -13,8 +13,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 public class UsuarioService {
-    private final UsuarioRepository usuarioRepository
-            ;
+    private final UsuarioRepository usuarioRepository;
 
     public Usuario save(Usuario usuario) {
         return usuarioRepository.save(usuario);
@@ -25,9 +24,7 @@ public class UsuarioService {
     }
 
     public List<Usuario> find() {
-        List<Usuario> usuarios = new ArrayList<>();
-        usuarioRepository.findAll().forEach(usuarios::add);
-        return usuarios;
+        return new ArrayList<>(usuarioRepository.findAll());
     }
 
 

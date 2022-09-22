@@ -1,24 +1,24 @@
 package br.ufc.nuvem.patrimoniomanager.model;
 
-import jakarta.persistence.*;
 import lombok.*;
 import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.Hibernate;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@RequiredArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
+@NoArgsConstructor
+@Table(name="usuario")
 public class Usuario {
     @Id
-    @NonNull
+    @GeneratedValue(strategy = GenerationType.AUTO)
     Long codigoUsuario;
 
     @Column(name = "nomeCompleto",nullable = false)
@@ -30,12 +30,17 @@ public class Usuario {
     @Column(name="indentificacao",unique = true)
     String identificacao;
 
+
+    @Column(name = "s3bucketname")
+    private String s3BucketName;
+
     @Column(name="senha")
     String senha;
 
-    @OneToMany(targetEntity = Bem.class, cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToMany(targetEntity = Bem.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     List<Bem> bens = new ArrayList<>();
+
 
     @Override
     public boolean equals(Object o) {

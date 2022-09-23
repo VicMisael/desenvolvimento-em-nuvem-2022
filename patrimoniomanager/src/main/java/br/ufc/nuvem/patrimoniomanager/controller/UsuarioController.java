@@ -11,17 +11,18 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@RestController("/user")
+@RestController()
+@RequestMapping("/user")
 @RequiredArgsConstructor
 public class UsuarioController {
     private final UsuarioService usuarioService;
 
-    @PostMapping
-    public ResponseEntity<Usuario> insertPessoa(@RequestParam UsuarioDTO usuarioDTO) {
+    @PostMapping()
+    public ResponseEntity<Usuario> insertPessoa(@RequestBody UsuarioDTO usuarioDTO) {
         return new ResponseEntity<>(usuarioService.save(usuarioDTO.toUsuario()), HttpStatus.ACCEPTED);
     }
 
-    @GetMapping
+    @GetMapping()
     public ResponseEntity<List<Usuario>> getAllPessoas() {
         return new ResponseEntity<>(usuarioService.find(), HttpStatus.ACCEPTED);
     }
@@ -31,13 +32,13 @@ public class UsuarioController {
         return new ResponseEntity<>(usuarioService.find(id), HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> deletePessoa(@RequestParam Long id) {
+    @DeleteMapping()
+    public ResponseEntity<Void> deletePessoa(@RequestBody Long id) {
         usuarioService.delete(id);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
-    @PutMapping
+    @PutMapping()
     public ResponseEntity<Usuario> updatePessoa(Usuario usuario) {
         return new ResponseEntity<>(usuarioService.update(usuario), HttpStatus.ACCEPTED);
     }

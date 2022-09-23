@@ -1,7 +1,7 @@
 package br.ufc.nuvem.patrimoniomanager.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
@@ -18,7 +18,7 @@ import java.util.Objects;
 @Table(name="usuario")
 public class Usuario {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long codigoUsuario;
 
     @Column(name = "nomeCompleto",nullable = false)
@@ -31,11 +31,14 @@ public class Usuario {
     String identificacao;
 
 
-    @Column(name = "s3bucketname")
-    private String s3BucketName;
+    @Column(name = "folderName")
+    private String folderName;
 
     @Column(name="senha")
     String senha;
+
+    @Column
+    Role role;
 
     @OneToMany(targetEntity = Bem.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore

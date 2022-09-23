@@ -1,7 +1,7 @@
 package br.ufc.nuvem.patrimoniomanager.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
@@ -16,11 +16,14 @@ import java.util.Objects;
 @Entity
 public class Bem {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long codArquivo;
 
     @Column(name = "nome")
     private String nome;
+
+    @Column(name="localizacao")
+    private String localizacao;
 
     @Column(name = "dirImageBem")
     private String dirImagemBem;

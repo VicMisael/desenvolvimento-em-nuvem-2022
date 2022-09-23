@@ -20,6 +20,7 @@ public class BemService {
     public Optional<Bem> getBemById(Long id) {
         return bemRepository.findById(id);
     }
+
     public void delete(Long id) {
         bemRepository.deleteById(id);
     }
@@ -39,7 +40,7 @@ public class BemService {
         Optional<Bem> bem = bemRepository.findById(id);
         if (bem.isPresent()) {
             Bem bem2 = bem.get();
-            bem2.setDirImagemBem(patrimonioDataRepository.insertData(file));
+            bem2.setDirImagemBem(patrimonioDataRepository.insertData(bem2.getUsuario().getFolderName(), file));
             return bemRepository.save(bem2);
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Update without ID");

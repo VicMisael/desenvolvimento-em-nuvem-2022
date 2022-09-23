@@ -5,10 +5,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Repository
 public class PatrimonioDataRepositoryMock implements PatrimonioDataRepository{
-
+    @Override
+    public String insertData(String foldername, MultipartFile filename) {
+        return "null";
+    }
 
     @Override
-    public String insertData(MultipartFile filename) {
-        return filename.getOriginalFilename();
+    public String deleteData(String foldername, String filename) {
+        return "null";
     }
 }

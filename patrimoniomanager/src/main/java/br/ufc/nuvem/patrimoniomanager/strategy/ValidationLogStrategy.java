@@ -9,5 +9,5 @@ import java.util.List;
 public interface ValidationLogStrategy {
     public Validation uploadValidation(Validation validation);
 
-    public List<Validation> getValidationListByBemId(Long id);
+    public List<Validation> getValidationListByBemId(Long bemid);
 }

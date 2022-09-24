@@ -41,11 +41,4 @@ public class UsuarioService {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Update without ID");
     }
 
-    public List<Bem> findUsuarioBemList(Long id){
-       Optional<Usuario> usuario= usuarioRepository.findById(id);
-        if(usuario.isPresent()){
-            return usuario.get().getBens();
-        }
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not Found");
-    }
 }

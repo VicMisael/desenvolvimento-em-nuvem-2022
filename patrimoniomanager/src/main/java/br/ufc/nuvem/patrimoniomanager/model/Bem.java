@@ -17,12 +17,15 @@ import java.util.Objects;
 public class Bem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long codArquivo;
+    private Long idBem;
 
-    @Column(name = "nome")
-    private String nome;
+    @Column(name = "name")
+    private String name;
 
-    @Column(name="localizacao")
+    @Column(name = "codpatrimonio")
+    private String codPatrimonio;
+
+    @Column(name = "localizacao")
     private String localizacao;
 
     @Column(name = "dirImageBem")
@@ -38,7 +41,7 @@ public class Bem {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Bem bem = (Bem) o;
-        return codArquivo != null && Objects.equals(codArquivo, bem.codArquivo);
+        return idBem != null && Objects.equals(idBem, bem.idBem);
     }
 
     @Override

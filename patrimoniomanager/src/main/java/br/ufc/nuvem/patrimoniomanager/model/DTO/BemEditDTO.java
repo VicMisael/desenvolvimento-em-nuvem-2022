@@ -9,9 +9,9 @@ import lombok.Data;
 import java.util.UUID;
 
 @Data
-public class BemDTO {
+public class BemEditDTO {
 
-
+    Long codbem;
     Long usuarioid;
 
     @JsonProperty("nome")
@@ -22,6 +22,6 @@ public class BemDTO {
     String codpatrimonio;
 
     public Bem toBem() {
-       return Bem.builder().usuario(Usuario.builder().codigoUsuario(usuarioid).build()).name(nome).localizacao(localizacao).codPatrimonio(codpatrimonio).build();
+        return Bem.builder().idBem(codbem).usuario(Usuario.builder().codigoUsuario(usuarioid).build()).name(nome).localizacao(localizacao).codPatrimonio(codpatrimonio).build();
     }
 }

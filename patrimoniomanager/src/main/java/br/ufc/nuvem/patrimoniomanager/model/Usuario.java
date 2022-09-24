@@ -15,26 +15,27 @@ import java.util.Objects;
 @Builder
 @Entity
 @NoArgsConstructor
-@Table(name="usuario")
+@Table(name = "usuario")
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long codigoUsuario;
 
-    @Column(name = "nomeCompleto",nullable = false)
+    @Column(name = "nomeCompleto", nullable = false)
     String nome;
 
-    @Column(name = "email",nullable = false)
+    @Column(name = "email", nullable = false)
     String email;
 
-    @Column(name="indentificacao",unique = true)
+    @Column(name = "indentificacao", unique = true)
     String identificacao;
 
 
     @Column(name = "folderName")
     private String folderName;
 
-    @Column(name="senha")
+    @Column(name = "senha")
+    @JsonIgnore
     String senha;
 
     @Column

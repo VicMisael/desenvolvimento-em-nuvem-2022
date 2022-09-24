@@ -6,6 +6,7 @@ import br.ufc.nuvem.patrimoniomanager.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,9 +17,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UsuarioController {
     private final UsuarioService usuarioService;
+    private final PasswordEncoder passwordEncoder;
 
     @PostMapping()
     public ResponseEntity<Usuario> insertPessoa(@RequestBody UsuarioDTO usuarioDTO) {
+        usuarioDTO.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
         return new ResponseEntity<>(usuarioService.save(usuarioDTO.toUsuario()), HttpStatus.ACCEPTED);
     }
 
@@ -32,8 +35,8 @@ public class UsuarioController {
         return new ResponseEntity<>(usuarioService.find(id), HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping()
-    public ResponseEntity<Void> deletePessoa(@RequestBody Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePessoa(@PathVariable Long id) {
         usuarioService.delete(id);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }

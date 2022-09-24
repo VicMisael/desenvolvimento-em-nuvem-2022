@@ -5,6 +5,21 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.List;
+
 @Table
-public interface BemRepository extends JpaRepository<Bem,Long> {
+public interface BemRepository extends JpaRepository<Bem, Long> {
+    List<Bem> findBemsByNameContainingIgnoreCase(String name);
+
+    List<Bem> findBemsByUsuario_CodigoUsuario(Long userId);
+    List<Bem> findBemsByLocalizacaoContainingIgnoreCase(String localizacao);
+
+    List<Bem> findBemsByLocalizacaoContainingIgnoreCaseAndNameContainingIgnoreCase(String localizacao, String name);
+
+    List<Bem> findBemsByUsuario_CodigoUsuarioAndNameContainingIgnoreCase(Long id, String name);
+
+    List<Bem> findBemsByUsuario_CodigoUsuarioAndLocalizacaoIgnoreCase(Long id, String localizacao);
+
+    List<Bem> findBemsByUsuario_CodigoUsuarioAndNameContainingIgnoreCaseAndLocalizacaoContainingIgnoreCase(Long id,String name,String localizacao);
+
 }

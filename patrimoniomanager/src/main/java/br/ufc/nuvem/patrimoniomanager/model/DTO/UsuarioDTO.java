@@ -3,10 +3,11 @@ package br.ufc.nuvem.patrimoniomanager.model.DTO;
 import br.ufc.nuvem.patrimoniomanager.model.Role;
 import br.ufc.nuvem.patrimoniomanager.model.Usuario;
 
-import lombok.Data;
-import lombok.NonNull;
+import lombok.*;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UsuarioDTO {
 
 
@@ -24,9 +25,6 @@ public class UsuarioDTO {
 
     @NonNull
     String senha;
-
-
-    String role;
 
 
     public Usuario toUsuario() {

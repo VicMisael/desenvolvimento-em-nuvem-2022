@@ -46,11 +46,9 @@ public class S3StorageStrategy implements StorageStrategy {
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion("us-east-1")
                 .build();
-    }
-
-    @Override
-    public String createFolder(String foldername) {
-        return null;
+        if (s3.listBuckets().stream().noneMatch(p -> p.getName().equals(s3BucketName))) {
+            s3.createBucket(s3BucketName);
+        }
     }
 
     @Override

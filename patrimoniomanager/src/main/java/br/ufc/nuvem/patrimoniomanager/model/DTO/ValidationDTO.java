@@ -18,6 +18,6 @@ public class ValidationDTO {
     Boolean aprovacao;
 
     public Validation toValidation() {
-        return Validation.builder().aprovacao(aprovacao).idBem(idBem).comentarios(comentarios).date(new Date()).build();
+        return Validation.builder().aprovacao(aprovacao).idBem(String.valueOf(idBem)).comentarios(comentarios).date(new Date()).build();
     }
 }

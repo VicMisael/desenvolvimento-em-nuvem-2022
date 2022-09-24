@@ -3,12 +3,15 @@ package br.ufc.nuvem.patrimoniomanager.strategy;
 import br.ufc.nuvem.patrimoniomanager.model.Validation;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
+import com.amazonaws.services.dynamodbv2.util.TableUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -35,8 +38,12 @@ public class DynamoDBValidationLogStrategy implements ValidationLogStrategy {
         }
         client = AmazonDynamoDBClientBuilder.standard()
                 .withCredentials(credentialsProvider)
+                .withRegion(Regions.US_EAST_1)
                 .build();
+
         mapper = new DynamoDBMapper(client);
+        TableUtils.createTableIfNotExists(client, mapper.generateCreateTableRequest(Validation.class)
+                .withProvisionedThroughput(new ProvisionedThroughput().withReadCapacityUnits(1L).withWriteCapacityUnits(1L)));
     }
 
     @Override

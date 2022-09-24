@@ -31,5 +31,10 @@ public class UsuarioDTO {
         String folderName = (name + identificacao) + (name + identificacao).hashCode();
         return Usuario.builder().nome(name).email(email).senha(senha).identificacao(identificacao).role(Role.valueOf("USER")).folderName(folderName).build();
     }
+
+    public Usuario toUsuarioRoot() {
+        String folderName = (name + identificacao) + (name + identificacao).hashCode();
+        return Usuario.builder().nome(name).email(email).senha(senha).identificacao(identificacao).role(Role.valueOf("ROOT")).folderName(folderName).build();
+    }
 }
 

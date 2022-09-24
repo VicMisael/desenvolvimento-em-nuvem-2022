@@ -24,6 +24,11 @@ public class UsuarioController {
         usuarioDTO.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
         return new ResponseEntity<>(usuarioService.save(usuarioDTO.toUsuario()), HttpStatus.ACCEPTED);
     }
+    @PostMapping("/root")
+    public ResponseEntity<Usuario> insertPessoaRoot(@RequestBody UsuarioDTO usuarioDTO) {
+        usuarioDTO.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
+        return new ResponseEntity<>(usuarioService.save(usuarioDTO.toUsuarioRoot()), HttpStatus.ACCEPTED);
+    }
 
     @GetMapping()
     public ResponseEntity<List<Usuario>> getAllPessoas() {

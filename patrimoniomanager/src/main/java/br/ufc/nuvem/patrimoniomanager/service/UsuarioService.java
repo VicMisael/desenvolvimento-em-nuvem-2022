@@ -18,11 +18,13 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
 
     public Usuario save(Usuario usuario) {
-        return usuarioRepository.save(usuario);
+        if (!usuarioRepository.existsUsuarioByIdentificacao(usuario.getIdentificacao()))
+            return usuarioRepository.save(usuario);
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "user already exists ");
     }
 
     public Optional<Usuario> find(Long id) {
-       return usuarioRepository.findById(id);
+        return usuarioRepository.findById(id);
     }
 
     public List<Usuario> find() {

@@ -44,7 +44,7 @@ public class BemController {
 
     @GetMapping()
     @ApiOperation("Get bens by name")
-    public ResponseEntity<List<Bem>> getBensByName(@RequestParam String name, @RequestParam String localizacaos) {
+    public ResponseEntity<List<Bem>> getBensByName(@RequestParam("name") String name, @RequestParam("local") String localizacaos) {
         //Puxar o principal, Se o usuario for root pega todos, se for User pega só os deles
         return new ResponseEntity<>(bemService.searchBensByName(name), HttpStatus.ACCEPTED);
     }
@@ -61,9 +61,9 @@ public class BemController {
         return new ResponseEntity<>(bemService.userBensList(1L), HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping()
+    @DeleteMapping("/{id}")
     @ApiOperation("Deletar Bem")
-    public void deleteBem(@RequestBody Long id) {
+    public void deleteBem(@PathVariable Long id) {
         bemService.delete(id);
     }
 

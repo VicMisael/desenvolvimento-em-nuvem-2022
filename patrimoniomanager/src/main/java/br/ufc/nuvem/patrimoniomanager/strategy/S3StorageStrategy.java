@@ -7,18 +7,13 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.ListObjectsRequest;
-import com.amazonaws.services.s3.model.ObjectListing;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.amazonaws.services.s3.model.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-
-import java.io.File;
+import org.springframework.web.multipart.MultipartFile;
 
 @Component
-public class S3StorageStrategy implements StorageStrategy{
+public class S3StorageStrategy implements StorageStrategy {
 
     private final String S3BucketName;
     private final AmazonS3 s3;
@@ -45,12 +40,16 @@ public class S3StorageStrategy implements StorageStrategy{
     }
 
     @Override
-    public String insertFileAtFolder(String foldername, File file) {
+    public String insertFileAtFolder(String foldername, MultipartFile file) {
+
         //Realiza a inserção do arquivo e retorna a url para salvamento no banco
         try {
-            s3.putObject(new PutObjectRequest(S3BucketName ,foldername + "/" + file.getName(), file ));
-            return getObjectReference(foldername + "/" + file.getName());
-        }catch (Exception ex){
+            ObjectMetadata data = new ObjectMetadata();
+            data.setContentType(file.getContentType());
+            data.setContentLength(file.getSize());
+            s3.putObject(new PutObjectRequest(S3BucketName, foldername + "/" + file.getOriginalFilename(), file.getInputStream(), data));
+            return foldername + "/" + file.getOriginalFilename();
+        } catch (Exception ex) {
             ex.printStackTrace();
             return "";
         }
@@ -58,18 +57,19 @@ public class S3StorageStrategy implements StorageStrategy{
 
     @Override
     public boolean deleteFile(String filename) {
-        String urlReference = getObjectReference(filename);
+        String urlReference = getUrl(filename);
         //Se o arquivo existe no folder, realiza a exclusão
-        if (!urlReference.equals("")){
+        if (!urlReference.equals("")) {
             s3.deleteObject(S3BucketName, filename);
             return true;
-        }else {
+        } else {
 
             return false;
         }
     }
+
     @Override
-    public String getObjectReference(String filename){
+    public String getUrl(String filename) {
         //Obtem a lista de arquivos do folder especificado
         ObjectListing objectListing = s3.listObjects(new ListObjectsRequest()
                 .withBucketName(S3BucketName)
@@ -77,19 +77,14 @@ public class S3StorageStrategy implements StorageStrategy{
 
         //Verifica se o arquivo em questao está presente no folder
 
-        for (S3ObjectSummary s3Summary:objectListing.getObjectSummaries())
-        {
-             if (s3Summary.getKey().equals(filename)){
+        for (S3ObjectSummary s3Summary : objectListing.getObjectSummaries()) {
+            if (s3Summary.getKey().equals(filename)) {
                 //Caso o folder possua o arquivo, é retornada a url.
-                return s3.getUrl(S3BucketName,filename).toString();
+                return s3.getUrl(S3BucketName, filename).toString();
             }
         }
         //Caso o arquivo nao seja encontrado, retorna branco
         return "";
-
-
-
-
 
     }
 

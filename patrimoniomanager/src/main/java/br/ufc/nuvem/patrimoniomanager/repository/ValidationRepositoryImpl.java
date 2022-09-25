@@ -2,13 +2,15 @@ package br.ufc.nuvem.patrimoniomanager.repository;
 
 import br.ufc.nuvem.patrimoniomanager.model.Validation;
 import br.ufc.nuvem.patrimoniomanager.strategy.ValidationLogStrategy;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
+@RequiredArgsConstructor
 public class ValidationRepositoryImpl implements ValidationRepository {
-    ValidationLogStrategy validationLogStrategy;
+    private final ValidationLogStrategy validationLogStrategy;
 
     @Override
     public Validation addValidation(Validation validation) {

@@ -26,6 +26,10 @@ public class BemService {
         return bemRepository.findById(id);
     }
 
+    public List<Bem> findAll() {
+        return bemRepository.findAll();
+    }
+
     public List<Bem> searchBens(Optional<Long> userId, String name) {
         if (userId.isPresent())
             return bemRepository.findBemsByUsuario_CodigoUsuarioAndNameContainingIgnoreCase(userId.get(), name);

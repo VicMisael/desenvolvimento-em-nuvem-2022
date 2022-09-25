@@ -2,6 +2,7 @@ package br.ufc.nuvem.patrimoniomanager.configuration.security;
 
 import br.ufc.nuvem.patrimoniomanager.model.Role;
 import br.ufc.nuvem.patrimoniomanager.model.Usuario;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +11,7 @@ import java.util.Collection;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Getter
 public class UserDetailsImpl implements UserDetails {
     private final Usuario usuario;
 

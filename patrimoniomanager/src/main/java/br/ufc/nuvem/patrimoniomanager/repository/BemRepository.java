@@ -12,6 +12,7 @@ public interface BemRepository extends JpaRepository<Bem, Long> {
     List<Bem> findBemsByNameContainingIgnoreCase(String name);
 
     List<Bem> findBemsByUsuario_CodigoUsuario(Long userId);
+
     List<Bem> findBemsByLocalizacaoContainingIgnoreCase(String localizacao);
 
     List<Bem> findBemsByLocalizacaoContainingIgnoreCaseAndNameContainingIgnoreCase(String localizacao, String name);
@@ -20,6 +21,6 @@ public interface BemRepository extends JpaRepository<Bem, Long> {
 
     List<Bem> findBemsByUsuario_CodigoUsuarioAndLocalizacaoIgnoreCase(Long id, String localizacao);
 
-    List<Bem> findBemsByUsuario_CodigoUsuarioAndNameContainingIgnoreCaseAndLocalizacaoContainingIgnoreCase(Long id,String name,String localizacao);
+    List<Bem> findBemsByUsuario_CodigoUsuarioAndNameContainingIgnoreCaseAndLocalizacaoContainingIgnoreCase(Long id, String name, String localizacao);
 
 }

@@ -17,7 +17,6 @@ import java.util.Optional;
 @RequestMapping("/validation")
 @RequiredArgsConstructor
 public class ValidationController {
-    private final BemService bemService;
 
     private final ValidationService validationService;
 

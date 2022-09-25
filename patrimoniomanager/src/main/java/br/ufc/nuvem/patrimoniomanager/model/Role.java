@@ -20,5 +20,18 @@ public enum Role {
         public String getAuthority() {
             return authority;
         }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj instanceof Role) {
+                Role thisRole = (Role) obj;
+                return authority.equals(thisRole.toString());
+            } else if (obj instanceof PatrimonioGrantedAuthority) {
+                return this.authority.equals(((PatrimonioGrantedAuthority) obj).authority);
+            }
+            return super.equals(obj);
+        }
+
+
     }
 }

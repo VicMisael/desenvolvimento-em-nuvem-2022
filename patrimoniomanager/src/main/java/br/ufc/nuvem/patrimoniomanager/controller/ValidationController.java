@@ -26,9 +26,9 @@ public class ValidationController {
     public ResponseEntity<Validation> addValidation(@RequestBody ValidationDTO validation) {
         return new ResponseEntity<>(validationService.createValidation(validation.toValidation()), HttpStatus.ACCEPTED);
     }
-    @GetMapping("/validation")
-    public ResponseEntity<List<Validation>> getValidationsByBemId(@RequestBody Long id) {
-        return new ResponseEntity<>(validationService.getValidationListByBemId(id), HttpStatus.ACCEPTED);
+    @GetMapping()
+    public ResponseEntity<List<Validation>> getValidationsByBemId(@RequestParam Long bemid) {
+        return new ResponseEntity<>(validationService.getValidationListByBemId(bemid), HttpStatus.ACCEPTED);
     }
 
 }

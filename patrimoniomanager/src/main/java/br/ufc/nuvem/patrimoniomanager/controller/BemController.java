@@ -49,7 +49,7 @@ public class BemController {
 
     @PutMapping("/addfiles")
     @ApiOperation("Associar arquivo a bem")
-    public ResponseEntity<Bem> insertImageBem(@RequestBody Long id, @RequestParam MultipartFile file) {
+    public ResponseEntity<Bem> insertImageBem(@RequestParam Long id, @RequestParam MultipartFile file) {
         return new ResponseEntity<>(bemService.saveFile(id, file), HttpStatus.ACCEPTED);
     }
 

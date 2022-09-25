@@ -2,6 +2,7 @@ package br.ufc.nuvem.patrimoniomanager.service;
 
 import br.ufc.nuvem.patrimoniomanager.model.Bem;
 import br.ufc.nuvem.patrimoniomanager.model.Usuario;
+import br.ufc.nuvem.patrimoniomanager.repository.PatrimonioDataRepository;
 import br.ufc.nuvem.patrimoniomanager.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import java.util.Optional;
 @Service
 public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
+    private final PatrimonioDataRepository patrimonioDataRepository;
 
     public Usuario save(Usuario usuario) {
         if (!usuarioRepository.existsUsuarioByIdentificacao(usuario.getIdentificacao()))
@@ -33,6 +35,8 @@ public class UsuarioService {
 
 
     public void delete(Long id) {
+        if (find(id).isPresent())
+            find(id).get().getBens().forEach(bem -> patrimonioDataRepository.deleteData(bem.getDirImagemBem()));
         usuarioRepository.deleteById(id);
     }
 

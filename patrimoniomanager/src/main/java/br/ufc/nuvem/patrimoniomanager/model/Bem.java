@@ -31,6 +31,9 @@ public class Bem {
     @Column(name = "dirImageBem")
     private String dirImagemBem;
 
+    @Column(name = "bemUrl")
+    private String bemUrl;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private Usuario usuario;

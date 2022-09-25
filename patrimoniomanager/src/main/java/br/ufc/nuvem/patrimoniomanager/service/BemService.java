@@ -57,7 +57,12 @@ public class BemService {
     }
 
     public void delete(Long id) {
-        bemRepository.deleteById(id);
+        Optional<Bem> bem = findBemById(id);
+        if (bem.isPresent()) {
+            patrimonioDataRepository.deleteData(bem.get().getDirImagemBem());
+            bemRepository.deleteById(id);
+        }
+
     }
 
     public Bem save(Bem bem) {
@@ -76,6 +81,7 @@ public class BemService {
         if (bem.isPresent()) {
             Bem bem2 = bem.get();
             bem2.setDirImagemBem(patrimonioDataRepository.insertData(bem2.getUsuario().getFolderName(), file));
+            bem2.setBemUrl(patrimonioDataRepository.getBemUrl(bem2.getDirImagemBem()));
             return bemRepository.save(bem2);
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Update without ID");

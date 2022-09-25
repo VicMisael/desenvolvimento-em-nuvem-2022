@@ -18,13 +18,13 @@ public class S3StorageStrategyTest {
     void insertFile(){
         StorageStrategy s3StorageStrategy = new S3StorageStrategy("patrimoniomanager-files2");
 
-        s3StorageStrategy.insertFileAtFolder("emailsacolaitessa1728327602",createSampleFile());
+        //s3StorageStrategy.insertFileAtFolder("emailsacolaitessa1728327602",createSampleFile());
     }
     @Test
     void getFileReference(){
         StorageStrategy s3StorageStrategy = new S3StorageStrategy("patrimoniomanager-files2");
 
-        s3StorageStrategy.getObjectReference("emailsacolaitessa1728327602/aws-java-sdk-6376925060632508389.txt");
+        s3StorageStrategy.getUrl("emailsacolaitessa1728327602/aws-java-sdk-6376925060632508389.txt");
     }
     @Test
     void deleteFile(){

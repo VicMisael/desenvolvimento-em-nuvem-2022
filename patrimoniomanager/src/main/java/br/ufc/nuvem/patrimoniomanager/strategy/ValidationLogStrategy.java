@@ -1,7 +1,6 @@
 package br.ufc.nuvem.patrimoniomanager.strategy;
 
 import br.ufc.nuvem.patrimoniomanager.model.Validation;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 

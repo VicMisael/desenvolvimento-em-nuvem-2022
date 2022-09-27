@@ -1,6 +1,5 @@
 package br.ufc.nuvem.patrimoniomanager.service;
 
-import br.ufc.nuvem.patrimoniomanager.model.Bem;
 import br.ufc.nuvem.patrimoniomanager.model.Usuario;
 import br.ufc.nuvem.patrimoniomanager.repository.PatrimonioDataRepository;
 import br.ufc.nuvem.patrimoniomanager.repository.UsuarioRepository;

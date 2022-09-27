@@ -2,11 +2,8 @@ package br.ufc.nuvem.patrimoniomanager.model.DTO;
 
 import br.ufc.nuvem.patrimoniomanager.model.Bem;
 import br.ufc.nuvem.patrimoniomanager.model.Usuario;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-
-import java.util.UUID;
 
 @Data
 public class BemDTO {

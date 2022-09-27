@@ -2,7 +2,6 @@ package br.ufc.nuvem.patrimoniomanager.configuration.security;
 
 import br.ufc.nuvem.patrimoniomanager.model.Role;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 public class SecurityUtils {
     public static boolean containsAuthority(SecurityContext context, Role role) {

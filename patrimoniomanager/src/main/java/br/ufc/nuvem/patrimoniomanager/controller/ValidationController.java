@@ -1,9 +1,7 @@
 package br.ufc.nuvem.patrimoniomanager.controller;
 
-import br.ufc.nuvem.patrimoniomanager.model.Bem;
 import br.ufc.nuvem.patrimoniomanager.model.DTO.ValidationDTO;
 import br.ufc.nuvem.patrimoniomanager.model.Validation;
-import br.ufc.nuvem.patrimoniomanager.service.BemService;
 import br.ufc.nuvem.patrimoniomanager.service.ValidationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/validation")

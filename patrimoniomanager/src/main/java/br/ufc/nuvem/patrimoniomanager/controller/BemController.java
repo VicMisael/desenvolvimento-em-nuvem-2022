@@ -1,22 +1,17 @@
 package br.ufc.nuvem.patrimoniomanager.controller;
 
 
-import br.ufc.nuvem.patrimoniomanager.configuration.security.SecurityUtils;
 import br.ufc.nuvem.patrimoniomanager.configuration.security.UserDetailsImpl;
 import br.ufc.nuvem.patrimoniomanager.model.Bem;
 import br.ufc.nuvem.patrimoniomanager.model.DTO.BemDTO;
 import br.ufc.nuvem.patrimoniomanager.model.DTO.BemEditDTO;
 import br.ufc.nuvem.patrimoniomanager.model.Role;
-import br.ufc.nuvem.patrimoniomanager.model.Usuario;
 import br.ufc.nuvem.patrimoniomanager.service.BemService;
 import br.ufc.nuvem.patrimoniomanager.service.UsuarioService;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;

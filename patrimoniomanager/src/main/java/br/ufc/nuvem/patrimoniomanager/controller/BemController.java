@@ -55,17 +55,19 @@ public class BemController {
         //return new ResponseEntity<>(bemService.searchBensByName(name), HttpStatus.ACCEPTED);
 
         SecurityContext context = SecurityContextHolder.getContext();
-        Long codUsuario = null;
         if (containsAuthority(context, Role.USER)) {
-            codUsuario = ((UserDetailsImpl) context.getAuthentication().getPrincipal()).getUsuario().getCodigoUsuario();
+            return new ResponseEntity<>(bemService.searchBensByName(name), HttpStatus.ACCEPTED);
+        } else if (containsAuthority(context, Role.ROOT)) {
+            Long codUsuario = ((UserDetailsImpl) context.getAuthentication().getPrincipal()).getUsuario().getCodigoUsuario();
+            if (!localizacaos.isBlank() && !name.isBlank()) {
+                return new ResponseEntity<>(bemService.searchBensAndNameAndLocalization(Optional.ofNullable(codUsuario), name, localizacaos), HttpStatus.ACCEPTED);
+            } else if (localizacaos.isBlank() && !name.isBlank()) {
+                return new ResponseEntity<>(bemService.searchBens(Optional.ofNullable(codUsuario), name), HttpStatus.ACCEPTED);
+            } else if (!localizacaos.isBlank() && name.isBlank()) {
+                return new ResponseEntity<>(bemService.searchBensAndLocalization(Optional.ofNullable(codUsuario), name), HttpStatus.ACCEPTED);
+            }
         }
-        if (!localizacaos.isBlank() && !name.isBlank()) {
-            return new ResponseEntity<>(bemService.searchBensAndNameAndLocalization(Optional.ofNullable(codUsuario), name, localizacaos), HttpStatus.ACCEPTED);
-        } else if (localizacaos.isBlank() && !name.isBlank()) {
-            return new ResponseEntity<>(bemService.searchBens(Optional.ofNullable(codUsuario), name), HttpStatus.ACCEPTED);
-        } else if (!localizacaos.isBlank() && name.isBlank()) {
-            return new ResponseEntity<>(bemService.searchBensAndLocalization(Optional.ofNullable(codUsuario), name), HttpStatus.ACCEPTED);
-        }
+
         return new ResponseEntity<List<Bem>>(List.of(), HttpStatus.UNAUTHORIZED);
     }
 

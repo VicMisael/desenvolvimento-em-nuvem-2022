@@ -7,7 +7,6 @@ import br.ufc.nuvem.patrimoniomanager.model.DTO.BemDTO;
 import br.ufc.nuvem.patrimoniomanager.model.DTO.BemEditDTO;
 import br.ufc.nuvem.patrimoniomanager.model.Role;
 import br.ufc.nuvem.patrimoniomanager.service.BemService;
-import br.ufc.nuvem.patrimoniomanager.service.UsuarioService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,24 +27,23 @@ import static br.ufc.nuvem.patrimoniomanager.configuration.security.SecurityUtil
 
 public class BemController {
     private final BemService bemService;
-    private final UsuarioService usuarioService;
 
     @PostMapping()
     @ApiOperation("Inserir bem")
-    public ResponseEntity<Bem> insertBem(@RequestBody BemDTO bemDTO) {
-        return new ResponseEntity<>(bemService.save(bemDTO.toBem()), HttpStatus.ACCEPTED);
+    public ResponseEntity<Bem> insertBem(@RequestBody BemDTO bemDTO, @RequestParam MultipartFile multipartFile) {
+        return new ResponseEntity<>(bemService.save(bemDTO.toBem(), multipartFile), HttpStatus.ACCEPTED);
     }
 
     @PutMapping()
     @ApiOperation("Editar Bem")
     public ResponseEntity<Bem> editarBem(@RequestBody BemEditDTO bemDTO) {
-        return new ResponseEntity<>(bemService.update(bemDTO.getCodbem(), bemDTO.toBem()), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(bemService.update(bemDTO.getIdbem(), bemDTO.toBem()), HttpStatus.ACCEPTED);
     }
 
-    @PutMapping("/addfiles")
-    @ApiOperation("Associar arquivo a bem")
-    public ResponseEntity<Bem> insertImageBem(@RequestParam Long id, @RequestParam MultipartFile file) {
-        return new ResponseEntity<>(bemService.saveFile(id, file), HttpStatus.ACCEPTED);
+    @PutMapping()
+    @ApiOperation("editar e associar arquivo a bem")
+    public ResponseEntity<Bem> insertImageBem(@RequestBody BemEditDTO bemDTO, @RequestParam MultipartFile file) {
+        return new ResponseEntity<>(bemService.update(bemDTO.getIdbem(), bemDTO.toBem(), file), HttpStatus.ACCEPTED);
     }
 
     @GetMapping()

@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -65,27 +66,36 @@ public class BemService {
 
     }
 
-    public Bem save(Bem bem) {
-        return bemRepository.save(bem);
+    public Bem save(Bem bem, MultipartFile file) {
+        Bem savedBem = bemRepository.save(bem);
+        savedBem.setDirImagemBem(patrimonioDataRepository.insertData(savedBem.getUsuario().getFolderName(), file));
+        savedBem.setBemUrl(patrimonioDataRepository.getBemUrl(savedBem.getDirImagemBem()));
+        return bemRepository.save(savedBem);
     }
 
     public Bem update(Long id, Bem bem) {
         if (bemRepository.existsById(id)) {
-            return bemRepository.save(bem);
+            Bem foundBem = bemRepository.findById(id).get();
+            if (Objects.equals(foundBem.getUsuario().getCodigoUsuario(), bem.getUsuario().getCodigoUsuario())) {
+                return bemRepository.save(bem);
+            }
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Codigo usuario diferente");
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Update without ID");
     }
 
-    public Bem saveFile(Long id, MultipartFile file) {
-        Optional<Bem> bem = bemRepository.findById(id);
-        if (bem.isPresent()) {
-            Bem bem2 = bem.get();
-            bem2.setDirImagemBem(patrimonioDataRepository.insertData(bem2.getUsuario().getFolderName(), file));
-            bem2.setBemUrl(patrimonioDataRepository.getBemUrl(bem2.getDirImagemBem()));
-            return bemRepository.save(bem2);
+    public Bem update(Long id, Bem newBem, MultipartFile file) {
+        if (bemRepository.existsById(id)) {
+            Bem bem = bemRepository.findById(id).get();
+            if (Objects.equals(bem.getUsuario().getCodigoUsuario(), newBem.getUsuario().getCodigoUsuario())) {
+                bem.setDirImagemBem(patrimonioDataRepository.insertData(bem.getUsuario().getFolderName(), file));
+                bem.setBemUrl(patrimonioDataRepository.getBemUrl(bem.getDirImagemBem()));
+                return bemRepository.save(bem);
+            }
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Codigo usuario diferente");
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Update without ID");
-    }
 
+    }
 
 }

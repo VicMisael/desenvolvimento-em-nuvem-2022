@@ -11,9 +11,7 @@ public class BemEditDTO {
     Long codbem;
     Long usuarioid;
 
-    @JsonProperty("nome")
     String nome;
-
     String localizacao;
 
     public Bem toBem() {

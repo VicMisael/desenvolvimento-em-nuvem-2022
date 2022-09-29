@@ -37,13 +37,13 @@ public class BemController {
     @PutMapping()
     @ApiOperation("Editar Bem")
     public ResponseEntity<Bem> editarBem(@RequestBody BemEditDTO bemDTO) {
-        return new ResponseEntity<>(bemService.update(bemDTO.getIdbem(), bemDTO.toBem()), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(bemService.update(bemDTO.getCodbem(), bemDTO.toBem()), HttpStatus.ACCEPTED);
     }
 
     @PutMapping()
     @ApiOperation("editar e associar arquivo a bem")
     public ResponseEntity<Bem> insertImageBem(@RequestBody BemEditDTO bemDTO, @RequestParam MultipartFile file) {
-        return new ResponseEntity<>(bemService.update(bemDTO.getIdbem(), bemDTO.toBem(), file), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(bemService.update(bemDTO.getCodbem(), bemDTO.toBem(), file), HttpStatus.ACCEPTED);
     }
 
     @GetMapping()

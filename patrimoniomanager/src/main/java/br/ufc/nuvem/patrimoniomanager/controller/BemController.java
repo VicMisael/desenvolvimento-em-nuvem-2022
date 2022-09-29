@@ -30,8 +30,8 @@ public class BemController {
 
     @PostMapping()
     @ApiOperation("Inserir bem")
-    public ResponseEntity<Bem> insertBem(@RequestBody BemDTO bemDTO, @RequestParam MultipartFile multipartFile) {
-        return new ResponseEntity<>(bemService.save(bemDTO.toBem(), multipartFile), HttpStatus.ACCEPTED);
+    public ResponseEntity<Bem> insertBem(@RequestBody BemDTO bemDTO) {
+        return new ResponseEntity<>(bemService.save(bemDTO.toBem()), HttpStatus.ACCEPTED);
     }
 
     @PutMapping()

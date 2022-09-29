@@ -62,10 +62,8 @@ public class BemService {
 
     }
 
-    public Bem save(Bem bem, MultipartFile file) {
+    public Bem save(Bem bem) {
         Bem savedBem = bemRepository.save(bem);
-        savedBem.setDirImagemBem(patrimonioDataRepository.insertData(savedBem.getUsuario().getFolderName(), file));
-        savedBem.setBemUrl(patrimonioDataRepository.getBemUrl(savedBem.getDirImagemBem()));
         return bemRepository.save(savedBem);
     }
 

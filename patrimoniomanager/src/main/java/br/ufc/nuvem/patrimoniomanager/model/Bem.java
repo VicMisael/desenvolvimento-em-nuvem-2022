@@ -22,9 +22,6 @@ public class Bem {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "codpatrimonio")
-    private String codPatrimonio;
-
     @Column(name = "localizacao")
     private String localizacao;
 

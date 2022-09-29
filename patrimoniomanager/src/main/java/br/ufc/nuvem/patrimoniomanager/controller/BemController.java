@@ -48,45 +48,37 @@ public class BemController {
 
     @GetMapping()
     @ApiOperation("Get bens by name")
-    public ResponseEntity<List<Bem>> getBensByName(@RequestParam("name") String name, @RequestParam("local") String localizacaos) {
+    public ResponseEntity<List<Bem>> getBensByName(@RequestParam("name") String name, @RequestParam("localizacao") String localizacao) {
         //Puxar o principal, Se o usuario for root pega todos, se for User pega só os deles
         //return new ResponseEntity<>(bemService.searchBensByName(name), HttpStatus.ACCEPTED);
 
         SecurityContext context = SecurityContextHolder.getContext();
+        Long codUsuario = null;
         if (containsAuthority(context, Role.USER)) {
-            return new ResponseEntity<>(bemService.searchBensByName(name), HttpStatus.ACCEPTED);
-        } else if (containsAuthority(context, Role.ROOT)) {
-            Long codUsuario = ((UserDetailsImpl) context.getAuthentication().getPrincipal()).getUsuario().getCodigoUsuario();
-            if (!localizacaos.isBlank() && !name.isBlank()) {
-                return new ResponseEntity<>(bemService.searchBensAndNameAndLocalization(Optional.ofNullable(codUsuario), name, localizacaos), HttpStatus.ACCEPTED);
-            } else if (localizacaos.isBlank() && !name.isBlank()) {
-                return new ResponseEntity<>(bemService.searchBens(Optional.ofNullable(codUsuario), name), HttpStatus.ACCEPTED);
-            } else if (!localizacaos.isBlank() && name.isBlank()) {
-                return new ResponseEntity<>(bemService.searchBensAndLocalization(Optional.ofNullable(codUsuario), name), HttpStatus.ACCEPTED);
+            codUsuario = ((UserDetailsImpl) context.getAuthentication().getPrincipal()).getUsuario().getCodigoUsuario();
+            if (!localizacao.isBlank() && !name.isBlank()) {
+                return new ResponseEntity<>(bemService.searchBensByLocalizationAndName(Optional.ofNullable(codUsuario), name, localizacao), HttpStatus.ACCEPTED);
+            } else if (localizacao.isBlank() && !name.isBlank()) {
+                return new ResponseEntity<>(bemService.searchBensByName(Optional.ofNullable(codUsuario), name), HttpStatus.ACCEPTED);
+            } else if (!localizacao.isBlank() && name.isBlank()) {
+                return new ResponseEntity<>(bemService.searchBensWithLocalization(Optional.ofNullable(codUsuario), localizacao), HttpStatus.ACCEPTED);
             }
+            return new ResponseEntity<>(bemService.userBensList(codUsuario), HttpStatus.ACCEPTED);
+        }
+        if (!localizacao.isBlank() && !name.isBlank()) {
+            return new ResponseEntity<>(bemService.searchBensByLocalizationAndName(Optional.empty(), name, localizacao), HttpStatus.ACCEPTED);
+        } else if (localizacao.isBlank() && !name.isBlank()) {
+            return new ResponseEntity<>(bemService.searchBensByName(Optional.empty(), name), HttpStatus.ACCEPTED);
+        } else if (!localizacao.isBlank() && name.isBlank()) {
+            return new ResponseEntity<>(bemService.searchBensWithLocalization(Optional.empty(), localizacao), HttpStatus.ACCEPTED);
         }
 
-        return new ResponseEntity<List<Bem>>(List.of(), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(bemService.findAll(), HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Optional<Bem>> getBem(@PathVariable Long id) {
         return new ResponseEntity<>(bemService.findBemById(id), HttpStatus.OK);
-    }
-
-    @GetMapping("/all")
-    @ApiOperation("Get bens by name")
-    public ResponseEntity<List<Bem>> getBensUsuario() {
-        //Puxar o principal, Se o usuario for root pega todos, se for User pega só os deles
-        SecurityContext context = SecurityContextHolder.getContext();
-        if (containsAuthority(context, Role.USER)) {
-            Long codUsuario = ((UserDetailsImpl) context.getAuthentication().getPrincipal()).getUsuario().getCodigoUsuario();
-            return new ResponseEntity<>(bemService.userBensList(codUsuario), HttpStatus.ACCEPTED);
-        } else if (containsAuthority(context, Role.ROOT)) {
-            return new ResponseEntity<>(bemService.findAll(), HttpStatus.ACCEPTED);
-        }
-        return new ResponseEntity<List<Bem>>(List.of(), HttpStatus.UNAUTHORIZED);
-
     }
 
     @DeleteMapping("/{id}")

@@ -19,10 +19,6 @@ public class BemService {
     private final BemRepository bemRepository;
     private final PatrimonioDataRepository patrimonioDataRepository;
 
-    public List<Bem> searchBensByName(String name) {
-        return bemRepository.findBemsByNameContainingIgnoreCase(name);
-    }
-
     public Optional<Bem> findBemById(Long id) {
         return bemRepository.findById(id);
     }
@@ -31,14 +27,14 @@ public class BemService {
         return bemRepository.findAll();
     }
 
-    public List<Bem> searchBens(Optional<Long> userId, String name) {
+    public List<Bem> searchBensByName(Optional<Long> userId, String name) {
         if (userId.isPresent())
             return bemRepository.findBemsByUsuario_CodigoUsuarioAndNameContainingIgnoreCase(userId.get(), name);
         else
             return bemRepository.findBemsByNameContainingIgnoreCase(name);
     }
 
-    public List<Bem> searchBensAndLocalization(Optional<Long> userId, String localizacao) {
+    public List<Bem> searchBensWithLocalization(Optional<Long> userId, String localizacao) {
         if (userId.isPresent())
             return bemRepository.findBemsByUsuario_CodigoUsuarioAndLocalizacaoIgnoreCase(userId.get(), localizacao);
         else
@@ -46,7 +42,7 @@ public class BemService {
 
     }
 
-    public List<Bem> searchBensAndNameAndLocalization(Optional<Long> userId, String name, String localizacao) {
+    public List<Bem> searchBensByLocalizationAndName(Optional<Long> userId, String name, String localizacao) {
         if (userId.isPresent())
             return bemRepository.findBemsByUsuario_CodigoUsuarioAndNameContainingIgnoreCaseAndLocalizacaoContainingIgnoreCase(userId.get(), name, localizacao);
         else

@@ -8,6 +8,7 @@ import java.util.List;
 
 @Table
 public interface BemRepository extends JpaRepository<Bem, Long> {
+
     List<Bem> findBemsByNameContainingIgnoreCase(String name);
 
     List<Bem> findBemsByUsuario_CodigoUsuario(Long userId);

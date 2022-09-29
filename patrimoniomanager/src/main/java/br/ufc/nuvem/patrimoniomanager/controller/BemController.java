@@ -42,8 +42,8 @@ public class BemController {
 
     @PutMapping("/addfiles")
     @ApiOperation("editar e associar arquivo a bem")
-    public ResponseEntity<Bem> insertImageBem(@RequestBody BemEditDTO bemDTO, @RequestParam MultipartFile file) {
-        return new ResponseEntity<>(bemService.update(bemDTO.getCodbem(), bemDTO.toBem(), file), HttpStatus.ACCEPTED);
+    public ResponseEntity<Bem> insertImageBem(@RequestParam Long id, @RequestParam MultipartFile file) {
+        return new ResponseEntity<>(bemService.addFile(id, file), HttpStatus.ACCEPTED);
     }
 
     @GetMapping()

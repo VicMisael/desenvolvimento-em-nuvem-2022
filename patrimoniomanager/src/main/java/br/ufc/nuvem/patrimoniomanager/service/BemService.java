@@ -78,15 +78,14 @@ public class BemService {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Update without ID");
     }
 
-    public Bem update(Long id, Bem newBem, MultipartFile file) {
+    public Bem addFile(Long id, MultipartFile file) {
         if (bemRepository.existsById(id)) {
             Bem bem = bemRepository.findById(id).get();
-            if (Objects.equals(bem.getUsuario().getCodigoUsuario(), newBem.getUsuario().getCodigoUsuario())) {
-                bem.setDirImagemBem(patrimonioDataRepository.insertData(bem.getUsuario().getFolderName(), file));
-                bem.setBemUrl(patrimonioDataRepository.getBemUrl(bem.getDirImagemBem()));
-                return bemRepository.save(bem);
-            }
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Codigo usuario diferente");
+
+            bem.setDirImagemBem(patrimonioDataRepository.insertData(bem.getUsuario().getFolderName(), file));
+            bem.setBemUrl(patrimonioDataRepository.getBemUrl(bem.getDirImagemBem()));
+            return bemRepository.save(bem);
+
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Update without ID");
 

@@ -2,8 +2,10 @@ package br.ufc.nuvem.patrimoniomanager.model.DTO;
 
 import br.ufc.nuvem.patrimoniomanager.model.Role;
 import br.ufc.nuvem.patrimoniomanager.model.Usuario;
-
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Data
 @AllArgsConstructor

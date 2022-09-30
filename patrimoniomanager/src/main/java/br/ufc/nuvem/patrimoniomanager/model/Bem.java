@@ -22,14 +22,14 @@ public class Bem {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "codpatrimonio")
-    private String codPatrimonio;
-
     @Column(name = "localizacao")
     private String localizacao;
 
     @Column(name = "dirImageBem")
     private String dirImagemBem;
+
+    @Column(name = "bemUrl")
+    private String bemUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore

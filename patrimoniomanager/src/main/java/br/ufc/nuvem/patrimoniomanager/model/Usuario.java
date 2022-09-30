@@ -41,7 +41,7 @@ public class Usuario {
     @Column
     Role role;
 
-    @OneToMany(targetEntity = Bem.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(targetEntity = Bem.class, cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @JsonIgnore
     List<Bem> bens = new ArrayList<>();
 

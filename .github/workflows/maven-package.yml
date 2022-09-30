@@ -7,14 +7,10 @@ on:
   workflow_dispatch:
   
 
-
 jobs:
   build:
 
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
 
     steps:
     - uses: actions/checkout@v3
@@ -23,13 +19,6 @@ jobs:
       with:
         java-version: '11'
         distribution: 'temurin'
-        server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-        settings-path: ${{ github.workspace }} # location for the settings.xml file
-
+        cache: maven
     - name: Build with Maven
-      run: cd patrimoniomanager && mvn install -B -DskipTests=true
-
-    - name: Publish to GitHub Packages Apache Maven
-      run: cd patrimoniomanager && mvn deploy -s $GITHUB_WORKSPACE/settings.xml -B -DskipTests=true
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
+      run: mvn -B DskipTests=true package --file pom.xml 

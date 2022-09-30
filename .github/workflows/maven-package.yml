@@ -30,6 +30,6 @@ jobs:
       run: cd patrimoniomanager && mvn install -B -DskipTests=true
 
     - name: Publish to GitHub Packages Apache Maven
-      run: cd patrimoniomanager && mvn deploy -s $GITHUB_WORKSPACE/settings.xml
+      run: cd patrimoniomanager && mvn deploy -s $GITHUB_WORKSPACE/settings.xml -B -DskipTests=true
       env:
         GITHUB_TOKEN: ${{ github.token }}

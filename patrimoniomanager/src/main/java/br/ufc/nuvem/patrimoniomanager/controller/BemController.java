@@ -48,8 +48,8 @@ public class BemController {
 
     @GetMapping()
     @ApiOperation("Get bens by name")
-    public ResponseEntity<List<Bem>> getBensByName(@RequestParam(value = "name", required = false) String name,
-                                                   @RequestParam(value = "localizacao", required = false) String localizacao) {
+    public ResponseEntity<List<Bem>> getBensByName(@RequestParam(value = "name", required = false) Optional<String> name,
+                                                   @RequestParam(value = "localizacao", required = false) Optional<String> localizacao) {
         //Puxar o principal, Se o usuario for root pega todos, se for User pega só os deles
         //return new ResponseEntity<>(bemService.searchBensByName(name), HttpStatus.ACCEPTED);
 
@@ -57,21 +57,21 @@ public class BemController {
         Long codUsuario;
         if (containsAuthority(context, Role.USER)) {
             codUsuario = ((UserDetailsImpl) context.getAuthentication().getPrincipal()).getUsuario().getCodigoUsuario();
-            if (!localizacao.isBlank() && !name.isBlank()) {
-                return new ResponseEntity<>(bemService.searchBensByLocalizationAndName(Optional.ofNullable(codUsuario), name, localizacao), HttpStatus.ACCEPTED);
-            } else if (localizacao.isBlank() && !name.isBlank()) {
-                return new ResponseEntity<>(bemService.searchBensByName(Optional.ofNullable(codUsuario), name), HttpStatus.ACCEPTED);
-            } else if (!localizacao.isBlank() && name.isBlank()) {
-                return new ResponseEntity<>(bemService.searchBensWithLocalization(Optional.ofNullable(codUsuario), localizacao), HttpStatus.ACCEPTED);
+            if (localizacao.isPresent() && name.isPresent()) {
+                return new ResponseEntity<>(bemService.searchBensByLocalizationAndName(Optional.ofNullable(codUsuario), name.get(), localizacao.get()), HttpStatus.ACCEPTED);
+            } else if (localizacao.isEmpty() && name.isPresent()) {
+                return new ResponseEntity<>(bemService.searchBensByName(Optional.ofNullable(codUsuario), name.get()), HttpStatus.ACCEPTED);
+            } else if (localizacao.isPresent()) {
+                return new ResponseEntity<>(bemService.searchBensWithLocalization(Optional.ofNullable(codUsuario), localizacao.get()), HttpStatus.ACCEPTED);
             }
             return new ResponseEntity<>(bemService.userBensList(codUsuario), HttpStatus.ACCEPTED);
         }
-        if (!localizacao.isBlank() && !name.isBlank()) {
-            return new ResponseEntity<>(bemService.searchBensByLocalizationAndName(Optional.empty(), name, localizacao), HttpStatus.ACCEPTED);
-        } else if (localizacao.isBlank() && !name.isBlank()) {
-            return new ResponseEntity<>(bemService.searchBensByName(Optional.empty(), name), HttpStatus.ACCEPTED);
-        } else if (!localizacao.isBlank() && name.isBlank()) {
-            return new ResponseEntity<>(bemService.searchBensWithLocalization(Optional.empty(), localizacao), HttpStatus.ACCEPTED);
+        if (localizacao.isPresent() && name.isPresent()) {
+            return new ResponseEntity<>(bemService.searchBensByLocalizationAndName(Optional.empty(), name.get(), localizacao.get()), HttpStatus.ACCEPTED);
+        } else if (localizacao.isEmpty() && name.isPresent()) {
+            return new ResponseEntity<>(bemService.searchBensByName(Optional.empty(), name.get()), HttpStatus.ACCEPTED);
+        } else if (localizacao.isPresent()) {
+            return new ResponseEntity<>(bemService.searchBensWithLocalization(Optional.empty(), localizacao.get()), HttpStatus.ACCEPTED);
         }
 
         return new ResponseEntity<>(bemService.findAll(), HttpStatus.ACCEPTED);

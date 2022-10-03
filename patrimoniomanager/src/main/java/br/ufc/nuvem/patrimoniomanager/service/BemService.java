@@ -79,8 +79,9 @@ public class BemService {
     }
 
     public Bem addFile(Long id, MultipartFile file) {
-        if (bemRepository.existsById(id)) {
-            Bem bem = bemRepository.findById(id).get();
+        Optional<Bem> bemOptional = bemRepository.findById(id);
+        if (bemOptional.isPresent()) {
+            Bem bem = bemOptional.get();
 
             bem.setDirImagemBem(patrimonioDataRepository.insertData(bem.getUsuario().getFolderName(), file));
             bem.setBemUrl(patrimonioDataRepository.getBemUrl(bem.getDirImagemBem()));

@@ -48,12 +48,13 @@ public class BemController {
 
     @GetMapping()
     @ApiOperation("Get bens by name")
-    public ResponseEntity<List<Bem>> getBensByName(@RequestParam("name") String name, @RequestParam("localizacao") String localizacao) {
+    public ResponseEntity<List<Bem>> getBensByName(@RequestParam(value = "name", required = false) String name,
+                                                   @RequestParam(value = "localizacao", required = false) String localizacao) {
         //Puxar o principal, Se o usuario for root pega todos, se for User pega só os deles
         //return new ResponseEntity<>(bemService.searchBensByName(name), HttpStatus.ACCEPTED);
 
         SecurityContext context = SecurityContextHolder.getContext();
-        Long codUsuario = null;
+        Long codUsuario;
         if (containsAuthority(context, Role.USER)) {
             codUsuario = ((UserDetailsImpl) context.getAuthentication().getPrincipal()).getUsuario().getCodigoUsuario();
             if (!localizacao.isBlank() && !name.isBlank()) {

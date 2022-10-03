@@ -58,6 +58,8 @@ public class BemService {
         if (bem.isPresent()) {
             patrimonioDataRepository.deleteData(bem.get().getDirImagemBem());
             bemRepository.deleteById(id);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "not found");
         }
 
     }
@@ -68,8 +70,9 @@ public class BemService {
     }
 
     public Bem update(Long id, Bem bem) {
-        if (bemRepository.existsById(id)) {
-            Bem foundBem = bemRepository.findById(id).get();
+        Optional<Bem> bemOptional = bemRepository.findById(id);
+        if (bemOptional.isPresent()) {
+            Bem foundBem = bemOptional.get();
             if (Objects.equals(foundBem.getUsuario().getCodigoUsuario(), bem.getUsuario().getCodigoUsuario())) {
                 return bemRepository.save(bem);
             }

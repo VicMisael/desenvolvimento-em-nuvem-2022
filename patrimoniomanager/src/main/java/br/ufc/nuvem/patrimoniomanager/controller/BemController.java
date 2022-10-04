@@ -22,6 +22,7 @@ import java.util.Optional;
 import static br.ufc.nuvem.patrimoniomanager.configuration.security.SecurityUtils.containsAuthority;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/bem")
 @RequiredArgsConstructor
 

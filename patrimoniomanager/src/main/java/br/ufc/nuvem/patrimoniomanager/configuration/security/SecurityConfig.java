@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .hasAuthority("ROOT")
                 .antMatchers(HttpMethod.GET, "/bem")
                 .permitAll()
-                .antMatchers("/bem/**")
+                .antMatchers("/bem/**","/user/me")
                 .hasAnyAuthority("USER", "ROOT")
                 .and()
                 .httpBasic();

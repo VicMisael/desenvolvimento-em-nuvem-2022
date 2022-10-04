@@ -53,11 +53,5 @@ public class SecurityConfig {
         http.cors(Customizer.withDefaults());
         return http.build();
     }
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
-        return (CorsConfigurationSource) source;
-    }
 
 }

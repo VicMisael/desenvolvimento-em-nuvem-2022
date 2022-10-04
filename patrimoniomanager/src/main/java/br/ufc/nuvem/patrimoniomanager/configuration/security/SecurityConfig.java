@@ -30,7 +30,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         //
-        http.cors().disable().csrf().disable()
+        http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/alive/**", "/auth/**", "/bem/{id}", "/validation/**")
                 .permitAll()
@@ -50,7 +50,6 @@ public class SecurityConfig {
                 .httpBasic();
         http.sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.cors(Customizer.withDefaults());
         return http.build();
     }
 

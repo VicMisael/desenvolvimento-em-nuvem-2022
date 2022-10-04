@@ -56,7 +56,9 @@ public class BemService {
     public void delete(Long id) {
         Optional<Bem> bem = findBemById(id);
         if (bem.isPresent()) {
-            patrimonioDataRepository.deleteData(bem.get().getDirImagemBem());
+            if(bem.get().getDirImagemBem() != null )
+                patrimonioDataRepository.deleteData(bem.get().getDirImagemBem());
+
             bemRepository.deleteById(id);
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "not found");

@@ -24,7 +24,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         //
-        http.cors().disable().csrf().disable()
+        http.cors().disable()
                 .authorizeRequests()
                 .antMatchers("/alive/**", "/auth/**", "/bem/{id}", "/validation/**")
                 .permitAll()
@@ -36,6 +36,8 @@ public class SecurityConfig {
                 .hasAnyAuthority("ROOT")
                 .antMatchers(HttpMethod.DELETE, "/user")
                 .hasAuthority("ROOT")
+                .antMatchers(HttpMethod.GET,"/bem")
+                .permitAll()
                 .antMatchers("/bem/**")
                 .hasAnyAuthority("USER", "ROOT")
                 .and()

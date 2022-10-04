@@ -16,8 +16,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    UserDetailsServiceImpl userDetails;
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -26,7 +24,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         //
-        http.csrf().disable()
+        http.cors().disable().csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/alive/**", "/auth/**", "/bem/{id}", "/validation/**")
                 .permitAll()

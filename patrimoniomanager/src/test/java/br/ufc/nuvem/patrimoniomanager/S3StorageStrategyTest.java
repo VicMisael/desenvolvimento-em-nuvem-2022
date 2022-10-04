@@ -4,38 +4,40 @@ import br.ufc.nuvem.patrimoniomanager.strategy.S3StorageStrategy;
 import br.ufc.nuvem.patrimoniomanager.strategy.StorageStrategy;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.io.*;
 
 public class S3StorageStrategyTest {
 
     @Test
-    void testBucketCreation(){
-        StorageStrategy s3StorageStrategy;
+    void testBucketCreation() {
+        System.out.println(new BCryptPasswordEncoder().encode("senha"));
     }
 
     @Test
-    void insertFile(){
+    void insertFile() {
         StorageStrategy s3StorageStrategy = new S3StorageStrategy("patrimoniomanager-files2");
 
         //s3StorageStrategy.insertFileAtFolder("emailsacolaitessa1728327602",createSampleFile());
     }
+
     @Test
-    void getFileReference(){
+    void getFileReference() {
         StorageStrategy s3StorageStrategy = new S3StorageStrategy("patrimoniomanager-files2");
 
         s3StorageStrategy.getUrl("emailsacolaitessa1728327602/aws-java-sdk-6376925060632508389.txt");
     }
+
     @Test
-    void deleteFile(){
+    void deleteFile() {
         StorageStrategy s3StorageStrategy = new S3StorageStrategy("patrimoniomanager-files2");
 
         s3StorageStrategy.deleteFile("emailsacolaitessa1728327602/aws-java-sdk-6376925060632508389.txt");
     }
 
 
-
-    private static File createSampleFile(){
+    private static File createSampleFile() {
 
         try {
             File file = File.createTempFile("aws-java-sdk-", ".txt");
@@ -50,7 +52,7 @@ public class S3StorageStrategyTest {
             writer.close();
 
             return file;
-       }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
 

@@ -35,6 +35,13 @@ public class Bem {
     @JsonIgnore
     private Usuario usuario;
 
+    @Transient
+    private Long usuarioId;
+
+    @PostLoad
+    void setUsuarioId() {
+        usuarioId = usuario.getCodigoUsuario();
+    }
 
     @Override
     public boolean equals(Object o) {

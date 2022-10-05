@@ -81,7 +81,7 @@ public class BemService {
             Bem foundBem = bemOptional.get();
             foundBem.setLocalizacao(bem.getLocalizacao());
             foundBem.setName(bem.getNome());
-            bemRepository.save(foundBem);
+            return bemRepository.save(foundBem);
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Update without ID");
     }

@@ -1,5 +1,6 @@
 package br.ufc.nuvem.patrimoniomanager.service;
 
+import br.ufc.nuvem.patrimoniomanager.model.DTO.UsuarioEditDTO;
 import br.ufc.nuvem.patrimoniomanager.model.Usuario;
 import br.ufc.nuvem.patrimoniomanager.repository.PatrimonioDataRepository;
 import br.ufc.nuvem.patrimoniomanager.repository.UsuarioRepository;
@@ -39,9 +40,15 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
 
-    public Usuario update(Usuario usuario) {
-        if (usuarioRepository.existsById(usuario.getCodigoUsuario())) {
-            return usuarioRepository.save(usuario);
+    public Usuario update(UsuarioEditDTO usuario) {
+        Optional<Usuario> optionalUsuario = usuarioRepository.findById(usuario.getId());
+        if (optionalUsuario.isPresent()) {
+            Usuario usuario1 = optionalUsuario.get();
+            usuario1.setNome(usuario.getName());
+            usuario1.setSenha(usuario.getSenha());
+            usuario1.setIdentificacao(usuario.getIdentificacao());
+            usuario1.setEmail(usuario.getEmail());
+            return usuarioRepository.save(usuario1);
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Update without ID");
     }

@@ -1,10 +1,7 @@
 package br.ufc.nuvem.patrimoniomanager.model.DTO;
 
 import br.ufc.nuvem.patrimoniomanager.model.Validation;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
@@ -13,8 +10,11 @@ import java.util.Date;
 @Getter
 @Setter
 public class ValidationDTO {
+    @NonNull
     Long idBem;
+    @NonNull
     String comentarios;
+    @NonNull
     Boolean aprovacao;
 
     public Validation toValidation() {

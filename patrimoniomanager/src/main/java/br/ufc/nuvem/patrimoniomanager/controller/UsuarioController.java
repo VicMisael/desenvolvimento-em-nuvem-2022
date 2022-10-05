@@ -2,6 +2,7 @@ package br.ufc.nuvem.patrimoniomanager.controller;
 
 import br.ufc.nuvem.patrimoniomanager.configuration.security.UserDetailsImpl;
 import br.ufc.nuvem.patrimoniomanager.model.DTO.UsuarioDTO;
+import br.ufc.nuvem.patrimoniomanager.model.DTO.UsuarioEditDTO;
 import br.ufc.nuvem.patrimoniomanager.model.Usuario;
 import br.ufc.nuvem.patrimoniomanager.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
@@ -60,7 +61,8 @@ public class UsuarioController {
     }
 
     @PutMapping()
-    public ResponseEntity<Usuario> updatePessoa(Usuario usuario) {
+    public ResponseEntity<Usuario> updatePessoa(@RequestBody UsuarioEditDTO usuario) {
+        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
         return new ResponseEntity<>(usuarioService.update(usuario), HttpStatus.ACCEPTED);
     }
 }

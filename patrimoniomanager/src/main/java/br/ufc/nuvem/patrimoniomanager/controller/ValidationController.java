@@ -18,8 +18,6 @@ public class ValidationController {
 
     private final ValidationService validationService;
 
-
-
     @PostMapping
     public ResponseEntity<Validation> addValidation(@RequestBody ValidationDTO validation) {
         return new ResponseEntity<>(validationService.createValidation(validation.toValidation()), HttpStatus.ACCEPTED);

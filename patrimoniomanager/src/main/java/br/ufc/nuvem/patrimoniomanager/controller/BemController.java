@@ -38,7 +38,7 @@ public class BemController {
     @PutMapping()
     @ApiOperation("Editar Bem")
     public ResponseEntity<Bem> editarBem(@RequestBody BemEditDTO bemDTO) {
-        return new ResponseEntity<>(bemService.update(bemDTO.getCodbem(), bemDTO.toBem()), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(bemService.update(bemDTO), HttpStatus.ACCEPTED);
     }
 
     @PutMapping("/addfiles")

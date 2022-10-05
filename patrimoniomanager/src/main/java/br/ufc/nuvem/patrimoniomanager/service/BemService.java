@@ -1,6 +1,7 @@
 package br.ufc.nuvem.patrimoniomanager.service;
 
 import br.ufc.nuvem.patrimoniomanager.model.Bem;
+import br.ufc.nuvem.patrimoniomanager.model.DTO.BemEditDTO;
 import br.ufc.nuvem.patrimoniomanager.repository.BemRepository;
 import br.ufc.nuvem.patrimoniomanager.repository.PatrimonioDataRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -27,7 +27,7 @@ public class BemService {
         return bemRepository.findAll();
     }
 
-    public boolean existsById(Long id){
+    public boolean existsById(Long id) {
         return bemRepository.existsById(id);
     }
 
@@ -60,7 +60,7 @@ public class BemService {
     public void delete(Long id) {
         Optional<Bem> bem = findBemById(id);
         if (bem.isPresent()) {
-            if(bem.get().getDirImagemBem() != null )
+            if (bem.get().getDirImagemBem() != null)
                 patrimonioDataRepository.deleteData(bem.get().getDirImagemBem());
 
             bemRepository.deleteById(id);
@@ -75,13 +75,13 @@ public class BemService {
         return bemRepository.save(savedBem);
     }
 
-    public Bem update(Long id, Bem bem) {
-        Optional<Bem> bemOptional = bemRepository.findById(id);
+    public Bem update(BemEditDTO bem) {
+        Optional<Bem> bemOptional = bemRepository.findById(bem.getCodbem());
         if (bemOptional.isPresent()) {
             Bem foundBem = bemOptional.get();
-            if (Objects.equals(foundBem.getUsuario().getCodigoUsuario(), bem.getUsuario().getCodigoUsuario())) {
-                return bemRepository.save(bem);
-            }
+            foundBem.setLocalizacao(bem.getLocalizacao());
+            foundBem.setName(bem.getNome());
+            bemRepository.save(foundBem);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Codigo usuario diferente");
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Update without ID");

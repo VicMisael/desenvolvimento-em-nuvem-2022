@@ -82,7 +82,6 @@ public class BemService {
             foundBem.setLocalizacao(bem.getLocalizacao());
             foundBem.setName(bem.getNome());
             bemRepository.save(foundBem);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Codigo usuario diferente");
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Update without ID");
     }

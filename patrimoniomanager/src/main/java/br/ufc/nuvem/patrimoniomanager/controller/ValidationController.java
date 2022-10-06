@@ -11,13 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/validation")
 @RequiredArgsConstructor
 public class ValidationController {
 
     private final ValidationService validationService;
-
-
 
     @PostMapping
     public ResponseEntity<Validation> addValidation(@RequestBody ValidationDTO validation) {

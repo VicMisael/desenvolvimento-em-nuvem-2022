@@ -47,7 +47,8 @@ public class S3StorageStrategy implements StorageStrategy {
             ObjectMetadata data = new ObjectMetadata();
             data.setContentType(file.getContentType());
             data.setContentLength(file.getSize());
-            s3.putObject(new PutObjectRequest(S3BucketName, foldername + "/" + file.getOriginalFilename(), file.getInputStream(), data));
+
+            s3.putObject(new PutObjectRequest(S3BucketName, foldername + "/" + file.getOriginalFilename(), file.getInputStream(), data).withCannedAcl(CannedAccessControlList.PublicRead));
             return foldername + "/" + file.getOriginalFilename();
         } catch (Exception ex) {
             ex.printStackTrace();

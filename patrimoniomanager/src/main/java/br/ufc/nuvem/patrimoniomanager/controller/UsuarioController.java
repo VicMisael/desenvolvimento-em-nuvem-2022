@@ -1,11 +1,15 @@
 package br.ufc.nuvem.patrimoniomanager.controller;
 
+import br.ufc.nuvem.patrimoniomanager.configuration.security.UserDetailsImpl;
 import br.ufc.nuvem.patrimoniomanager.model.DTO.UsuarioDTO;
+import br.ufc.nuvem.patrimoniomanager.model.DTO.UsuarioEditDTO;
 import br.ufc.nuvem.patrimoniomanager.model.Usuario;
 import br.ufc.nuvem.patrimoniomanager.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController()
+@CrossOrigin("*")
 @RequestMapping("/user")
 @RequiredArgsConstructor
 public class UsuarioController {
@@ -24,10 +29,19 @@ public class UsuarioController {
         usuarioDTO.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
         return new ResponseEntity<>(usuarioService.save(usuarioDTO.toUsuario()), HttpStatus.ACCEPTED);
     }
+
     @PostMapping("/root")
     public ResponseEntity<Usuario> insertPessoaRoot(@RequestBody UsuarioDTO usuarioDTO) {
         usuarioDTO.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
         return new ResponseEntity<>(usuarioService.save(usuarioDTO.toUsuarioRoot()), HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<Optional<Usuario>> getMe() {
+        SecurityContext context = SecurityContextHolder.getContext();
+        Long codUsuario = ((UserDetailsImpl) context.getAuthentication().getPrincipal()).getUsuario().getCodigoUsuario();
+        return new ResponseEntity<>(usuarioService.find(codUsuario), HttpStatus.ACCEPTED);
+
     }
 
     @GetMapping()
@@ -47,7 +61,8 @@ public class UsuarioController {
     }
 
     @PutMapping()
-    public ResponseEntity<Usuario> updatePessoa(Usuario usuario) {
+    public ResponseEntity<Usuario> updatePessoa(@RequestBody UsuarioEditDTO usuario) {
+        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
         return new ResponseEntity<>(usuarioService.update(usuario), HttpStatus.ACCEPTED);
     }
 }

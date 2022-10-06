@@ -6,17 +6,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    UserDetailsServiceImpl userDetails;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -28,20 +27,25 @@ public class SecurityConfig {
         //
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/alive/**", "/auth/**", "/bem/{id}", "/validation/**")
+                .antMatchers("/alive/**", "/bem/{id}", "/validation/**")
                 .permitAll()
                 .antMatchers(HttpMethod.POST, "/user")
                 .permitAll()
                 .antMatchers(HttpMethod.POST, "/user/root")
-                .hasAuthority("ROOT")
+                .permitAll()
+                .antMatchers(HttpMethod.GET, "/user/me")
+                .hasAnyAuthority("USER", "ROOT")
                 .antMatchers(HttpMethod.GET, "/user", "/user/{id}")
                 .hasAnyAuthority("ROOT")
                 .antMatchers(HttpMethod.DELETE, "/user")
                 .hasAuthority("ROOT")
-                .antMatchers("/bem/**")
-                .hasAnyAuthority("USER", "ROOT")
+                .antMatchers(HttpMethod.GET, "/bem")
+                .permitAll()
                 .and()
                 .httpBasic();
+        http.sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         return http.build();
     }
+
 }

@@ -10,19 +10,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/alive")
 public class AliveController {
 
-    @Value("${git.commit.message.short}")
-    private String commitMessage;
-
     @Value("${git.branch}")
     private String branch;
 
-    @Value("${git.commit.id}")
+    @Value("${git.commit.time}")
+    private String commitDate;
+    @Value("${git.commit.id.describe}")
     private String commitId;
 
     @Autowired
@@ -39,8 +40,9 @@ public class AliveController {
         }
 
         return "ALIVE \n" +
-                buildProperties.getName() + " @ " + SystemName + " branch " + branch + " Commit " + commitId + " \n" +
-                "compiled @ " + buildProperties.getTime();
+                buildProperties.getName() + " running on " + SystemName + " branch " + branch + " Commit " + commitId + " \n" +
+                "Commited at " + commitDate +
+                "compiled @ " + buildProperties.getTime().atOffset(ZoneOffset.ofHours(-3)).format(DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mma"));
 
 
     }

@@ -70,6 +70,13 @@ public class BemService {
 
     }
 
+    public void deletebensByUserid(Long userid) {
+        List<Bem> bensToDelete = bemRepository.findBemsByUsuario_CodigoUsuario(userid);
+        bensToDelete.forEach(bem -> patrimonioDataRepository.deleteData(bem.getDirImagemBem()));
+        bemRepository.deleteBemsByUsuario_CodigoUsuario(userid);
+
+    }
+
     public Bem save(Bem bem) {
         Bem savedBem = bemRepository.save(bem);
         return bemRepository.save(savedBem);

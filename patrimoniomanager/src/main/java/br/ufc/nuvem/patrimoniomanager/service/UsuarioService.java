@@ -17,7 +17,7 @@ import java.util.Optional;
 @Service
 public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
-    private final PatrimonioDataRepository patrimonioDataRepository;
+    private final BemService bemService;
 
     public Usuario save(Usuario usuario) {
         if (!usuarioRepository.existsUsuarioByIdentificacao(usuario.getIdentificacao()))
@@ -33,11 +33,17 @@ public class UsuarioService {
         return new ArrayList<>(usuarioRepository.findAll());
     }
 
+    public boolean exists(Long id) {
+       return usuarioRepository.existsById(id);
+    }
 
     public void delete(Long id) {
-        if (find(id).isPresent())
-            find(id).get().getBens().forEach(bem -> patrimonioDataRepository.deleteData(bem.getDirImagemBem()));
-        usuarioRepository.deleteById(id);
+        if (usuarioRepository.existsById(id)) {
+            bemService.deletebensByUserid(id);
+            usuarioRepository.delete(Usuario.builder().codigoUsuario(id).build());
+            return;
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
     public Usuario update(UsuarioEditDTO usuario) {

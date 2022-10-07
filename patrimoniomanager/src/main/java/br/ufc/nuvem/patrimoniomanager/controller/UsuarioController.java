@@ -1,9 +1,11 @@
 package br.ufc.nuvem.patrimoniomanager.controller;
 
 import br.ufc.nuvem.patrimoniomanager.configuration.security.UserDetailsImpl;
+import br.ufc.nuvem.patrimoniomanager.model.Bem;
 import br.ufc.nuvem.patrimoniomanager.model.DTO.UsuarioDTO;
 import br.ufc.nuvem.patrimoniomanager.model.DTO.UsuarioEditDTO;
 import br.ufc.nuvem.patrimoniomanager.model.Usuario;
+import br.ufc.nuvem.patrimoniomanager.service.BemService;
 import br.ufc.nuvem.patrimoniomanager.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +25,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UsuarioController {
     private final UsuarioService usuarioService;
+
+    private final BemService bemService;
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping()
@@ -54,7 +59,28 @@ public class UsuarioController {
         return new ResponseEntity<>(usuarioService.find(id), HttpStatus.ACCEPTED);
     }
 
+    @GetMapping("/bens")
+    public ResponseEntity<List<Bem>> getBensUsuario() {
+        SecurityContext context = SecurityContextHolder.getContext();
+        Long codUsuario = ((UserDetailsImpl) context.getAuthentication().getPrincipal()).getUsuario().getCodigoUsuario();
+        if (codUsuario != null)
+            return new ResponseEntity<>(bemService.userBensList(codUsuario), HttpStatus.OK);
+        else
+            return new ResponseEntity<>(List.of(), HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/bens/{id}")
+    public ResponseEntity<List<Bem>> getBensUsuario(@PathVariable Long id) {
+        if (usuarioService.exists(id))
+            return new ResponseEntity<>(bemService.userBensList(id), HttpStatus.OK);
+        else
+            return new ResponseEntity<>(List.of(), HttpStatus.NOT_FOUND);
+
+    }
+
+
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity<Void> deletePessoa(@PathVariable Long id) {
         usuarioService.delete(id);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);

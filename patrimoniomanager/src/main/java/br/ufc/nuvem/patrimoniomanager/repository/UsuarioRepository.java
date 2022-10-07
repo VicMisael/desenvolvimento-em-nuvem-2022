@@ -8,6 +8,7 @@ import javax.persistence.Table;
 @Table
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
+
     Usuario findByIdentificacao(String identificacao);
 
     boolean existsUsuarioByIdentificacao(String identificacao);

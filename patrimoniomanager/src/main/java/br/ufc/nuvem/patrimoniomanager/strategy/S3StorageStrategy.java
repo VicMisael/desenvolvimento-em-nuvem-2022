@@ -58,15 +58,23 @@ public class S3StorageStrategy implements StorageStrategy {
 
     @Override
     public boolean deleteFile(String filename) {
-        String urlReference = getUrl(filename);
-        //Se o arquivo existe no folder, realiza a exclusão
-        if (!urlReference.equals("")) {
-            s3.deleteObject(S3BucketName, filename);
-            return true;
-        } else {
+        if (filename != null) {
+            String urlReference = getUrl(filename);
+            //Se o arquivo existe no folder, realiza a exclusão
+            if (!urlReference.equals("")) {
+                s3.deleteObject(S3BucketName, filename);
+                String foldername = filename.split("/")[0];
+                if (s3.listObjects(S3BucketName, foldername).getObjectSummaries().isEmpty()) {
+                    s3.deleteObject(S3BucketName, foldername);
+                }
+                return true;
+            } else {
 
-            return false;
+                return false;
+            }
+
         }
+        return true;
     }
 
     @Override

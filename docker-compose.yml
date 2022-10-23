@@ -20,17 +20,20 @@ services:
       MINIO_SECRET_KEY: yTVI0vAt17XpN7Z3J7Q9Nf9WFmu
     command: server --console-address ":9001" /data
 
-  # patrimoniomanager:
-  #   build: ./patrimoniomanager
-  #   environment:
-  #     SPRING_PROFILES_ACTIVE: docker
-  #     POSTGRES_HOST: postgres
-  #     POSTGRES_PORT: 5432
-  #     MINIOSERVERIP: minio:9000
-  #     MINIO_ACCESS_KEY: zNfFZ97CSpxykea5ccWhsYkIOAl
-  #     MINIO_SECRET_KEY: yTVI0vAt17XpN7Z3J7Q9Nf9WFmu
-  #   depends_on:
-  #     - minio
+  patrimoniomanager:
+    build: ./patrimoniomanager
+    volumes:
+      - ~/.aws/:/root/.aws:ro
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      MINIO_SERVER_IP: minio
+      MINIO_SERVER_PORT: 9000
+      MINIO_ACCESS_KEY: zNfFZ97CSpxykea5ccWhsYkIOAl
+      MINIO_SECRET_KEY: yTVI0vAt17XpN7Z3J7Q9Nf9WFmu
+    depends_on:
+      - minio
   # patrimoniomanager_webapp:
   #     build: ./patrimoniomanager-webapp
   #     environment:

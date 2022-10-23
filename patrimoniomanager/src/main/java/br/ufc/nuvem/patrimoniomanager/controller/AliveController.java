@@ -17,15 +17,6 @@ import java.time.format.DateTimeFormatter;
 @CrossOrigin("*")
 @RequestMapping("/alive")
 public class AliveController {
-
-    @Value("${git.branch}")
-    private String branch;
-
-    @Value("${git.commit.time}")
-    private String commitDate;
-    @Value("${git.commit.id.describe}")
-    private String commitId;
-
     @Autowired
     BuildProperties buildProperties;
 
@@ -40,8 +31,7 @@ public class AliveController {
         }
 
         return "ALIVE \n" +
-                buildProperties.getName() + " running on " + SystemName + " branch " + branch + " Commit " + commitId + " \n" +
-                "Commited at " + commitDate +
+                buildProperties.getName() + " running on " + SystemName +
                 "compiled @ " + buildProperties.getTime().atOffset(ZoneOffset.ofHours(-3)).format(DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mma"));
 
 

@@ -4,35 +4,44 @@ package br.ufc.nuvem.patrimoniomanager.strategy;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
+import com.amazonaws.util.AwsHostNameUtils;
+import io.minio.GetObjectResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 @Component
+@Profile("default")
+@Slf4j
 public class S3StorageStrategy implements StorageStrategy {
 
     private final String S3BucketName;
     private final AmazonS3 s3;
-
-    public S3StorageStrategy(@Value("${patrimoniomanager.bucketname}") String s3BucketName) {
+    public S3StorageStrategy(@Value("${patrimoniomanager.bucketname}") String s3BucketName,
+                             @Value("${patrimoniomanager.minio.accesskey}") String minioAccessKey,
+                             @Value("${patrimoniomanager.minio.secretkey}") String minioSecretKey,
+                             @Value("${patrimoniomanager.connection.string}") String minioConnection) {
+        log.info("Using Amazon S3");
         this.S3BucketName = s3BucketName;
         AWSCredentials credentials = null;
         try {
-            credentials = new ProfileCredentialsProvider("default").getCredentials();
+            credentials = new BasicAWSCredentials(minioAccessKey, minioSecretKey);
         } catch (Exception e) {
-            throw new AmazonClientException(
-                    "Cannot load the credentials from the credential profiles file. " +
-                            "Please make sure that your credentials file is at the correct " +
-                            "location (C:\\Users\\Misael\\.aws\\credentials), and is in valid format.",
-                    e);
+            log.error(e.getMessage());
         }
         s3 = AmazonS3ClientBuilder.standard()
+                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(minioConnection, AwsHostNameUtils.parseRegion(minioConnection, AmazonS3Client.S3_SERVICE_NAME)))
+                .withPathStyleAccessEnabled(true)
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                .withRegion("us-east-1")
                 .build();
         if (s3.listBuckets().stream().noneMatch(p -> p.getName().equals(s3BucketName))) {
             s3.createBucket(s3BucketName);
@@ -80,9 +89,7 @@ public class S3StorageStrategy implements StorageStrategy {
     @Override
     public String getUrl(String filename) {
         //Obtem a lista de arquivos do folder especificado
-        ObjectListing objectListing = s3.listObjects(new ListObjectsRequest()
-                .withBucketName(S3BucketName)
-                .withPrefix(filename.split("/")[0]));
+        ObjectListing objectListing = s3.listObjects(new ListObjectsRequest().withBucketName(S3BucketName).withPrefix(filename.split("/")[0]));
 
         //Verifica se o arquivo em questao está presente no folder
 

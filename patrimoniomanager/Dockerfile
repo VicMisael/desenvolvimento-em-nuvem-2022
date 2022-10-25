@@ -1,7 +1,8 @@
 FROM maven:3.8-jdk-11 AS build
-COPY pom.xml /usr/src/app/pom.xml
-RUN mvn -f /usr/src/app/pom.xml -B dependency:resolve
+WORKDIR /usr/src/app/
+COPY pom.xml ./pom.xml
+RUN mvn dependency:go-offline
 
-COPY src /usr/src/app/src
-RUN mvn -f /usr/src/app/pom.xml  -DskipTests=true package
+COPY src ./src
+RUN mvn -B -DskipTests=true package
 ENTRYPOINT ["java","-jar","/usr/src/app/target/patrimoniomanager-0.0.1-SNAPSHOT.jar"]

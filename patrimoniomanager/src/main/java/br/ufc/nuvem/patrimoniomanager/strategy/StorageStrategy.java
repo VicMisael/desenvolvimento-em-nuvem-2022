@@ -1,6 +1,5 @@
 package br.ufc.nuvem.patrimoniomanager.strategy;
 
-import io.minio.GetObjectResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 

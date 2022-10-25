@@ -1,23 +1,19 @@
 package br.ufc.nuvem.patrimoniomanager.strategy;
 
 
-import com.amazonaws.AmazonClientException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
-import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
-import com.amazonaws.util.AwsHostNameUtils;
-import io.minio.GetObjectResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+
+import static br.ufc.nuvem.patrimoniomanager.util.BucketUtils.createPolicyJson;
 
 @Component
 @Profile("default")
@@ -26,25 +22,23 @@ public class S3StorageStrategy implements StorageStrategy {
 
     private final String S3BucketName;
     private final AmazonS3 s3;
-    public S3StorageStrategy(@Value("${patrimoniomanager.bucketname}") String s3BucketName,
-                             @Value("${patrimoniomanager.minio.accesskey}") String minioAccessKey,
-                             @Value("${patrimoniomanager.minio.secretkey}") String minioSecretKey,
-                             @Value("${patrimoniomanager.connection.string}") String minioConnection) {
-        log.info("Using Amazon S3");
+
+
+    public S3StorageStrategy(@Value("${patrimoniomanager.bucketname}") String s3BucketName) {
         this.S3BucketName = s3BucketName;
         AWSCredentials credentials = null;
         try {
-            credentials = new BasicAWSCredentials(minioAccessKey, minioSecretKey);
+            credentials = new ProfileCredentialsProvider("default").getCredentials();
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e.toString());
         }
         s3 = AmazonS3ClientBuilder.standard()
-                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(minioConnection, AwsHostNameUtils.parseRegion(minioConnection, AmazonS3Client.S3_SERVICE_NAME)))
-                .withPathStyleAccessEnabled(true)
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
+                .withRegion("us-east-1")
                 .build();
         if (s3.listBuckets().stream().noneMatch(p -> p.getName().equals(s3BucketName))) {
             s3.createBucket(s3BucketName);
+            s3.setBucketPolicy(new SetBucketPolicyRequest(s3BucketName, createPolicyJson(s3BucketName)));
         }
     }
 
@@ -57,7 +51,7 @@ public class S3StorageStrategy implements StorageStrategy {
             data.setContentType(file.getContentType());
             data.setContentLength(file.getSize());
 
-            s3.putObject(new PutObjectRequest(S3BucketName, foldername + "/" + file.getOriginalFilename(), file.getInputStream(), data).withCannedAcl(CannedAccessControlList.PublicRead));
+            s3.putObject(new PutObjectRequest(S3BucketName, foldername + "/" + file.getOriginalFilename(), file.getInputStream(), data));
             return foldername + "/" + file.getOriginalFilename();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -89,7 +83,9 @@ public class S3StorageStrategy implements StorageStrategy {
     @Override
     public String getUrl(String filename) {
         //Obtem a lista de arquivos do folder especificado
-        ObjectListing objectListing = s3.listObjects(new ListObjectsRequest().withBucketName(S3BucketName).withPrefix(filename.split("/")[0]));
+        ObjectListing objectListing = s3.listObjects(new ListObjectsRequest()
+                .withBucketName(S3BucketName)
+                .withPrefix(filename.split("/")[0]));
 
         //Verifica se o arquivo em questao está presente no folder
 

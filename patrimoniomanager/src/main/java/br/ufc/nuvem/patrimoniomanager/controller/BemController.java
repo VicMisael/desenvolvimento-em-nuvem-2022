@@ -49,6 +49,7 @@ public class BemController {
     }
 
     @GetMapping()
+    @CrossOrigin("*")
     @ApiOperation("Get bens by name")
     public ResponseEntity<List<Bem>> getBensByName(@RequestParam(value = "name", required = false) Optional<String> name,
                                                    @RequestParam(value = "localizacao", required = false) Optional<String> localizacao) {

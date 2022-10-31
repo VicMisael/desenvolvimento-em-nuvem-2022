@@ -37,7 +37,6 @@ services:
        - minio
   patrimoniomanager_webapp:
        build: ./patrimoniomanager-webapp
-       environment:
        ports:
          - 3000:3000
        depends_on:

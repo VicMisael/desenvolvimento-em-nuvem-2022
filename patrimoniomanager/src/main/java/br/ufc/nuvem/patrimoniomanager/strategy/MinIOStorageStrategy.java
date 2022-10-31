@@ -91,7 +91,7 @@ public class MinIOStorageStrategy implements StorageStrategy {
 
     @Override
     public String getUrl(String filename) {
-        return amazonS3interface.getUrl(minioBucketName, filename).toString();
+        return amazonS3interface.getUrl(minioBucketName, filename).toString().replaceAll("minio","localhost");
 
     }
 }

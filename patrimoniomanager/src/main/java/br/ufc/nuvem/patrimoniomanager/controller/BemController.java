@@ -41,6 +41,7 @@ public class BemController {
         return new ResponseEntity<>(bemService.update(bemDTO), HttpStatus.ACCEPTED);
     }
 
+    @CrossOrigin("*")
     @PutMapping("/addfiles")
     @ApiOperation("editar e associar arquivo a bem")
     public ResponseEntity<Bem> insertImageBem(@RequestParam Long id, @RequestParam MultipartFile file) {

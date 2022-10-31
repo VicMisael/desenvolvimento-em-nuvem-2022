@@ -38,9 +38,8 @@ services:
   patrimoniomanager_webapp:
        build: ./patrimoniomanager-webapp
        environment:
-         BACKEND_IP: patrimoniomanager:8080
        ports:
-         - 85:9000
+         - 3000:3000
        depends_on:
        - patrimoniomanager
 volumes:

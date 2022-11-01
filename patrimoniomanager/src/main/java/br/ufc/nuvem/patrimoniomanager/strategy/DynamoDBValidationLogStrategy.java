@@ -11,6 +11,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
 import com.amazonaws.services.dynamodbv2.util.TableUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
+@Slf4j
 public class DynamoDBValidationLogStrategy implements ValidationLogStrategy {
 
 
@@ -29,11 +31,8 @@ public class DynamoDBValidationLogStrategy implements ValidationLogStrategy {
         try {
             credentialsProvider.getCredentials();
         } catch (Exception e) {
-            throw new AmazonClientException(
-                    "Cannot load the credentials from the credential profiles file. " +
-                            "Please make sure that your credentials file is at the correct " +
-                            "location (C:\\Users\\Misael\\.aws\\credentials), and is in valid format.",
-                    e);
+            log.error(e.toString());
+
         }
         client = AmazonDynamoDBClientBuilder.standard()
                 .withCredentials(credentialsProvider)

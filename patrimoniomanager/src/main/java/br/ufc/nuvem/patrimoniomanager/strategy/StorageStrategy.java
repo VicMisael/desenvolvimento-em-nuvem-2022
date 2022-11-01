@@ -7,6 +7,7 @@ public interface StorageStrategy {
     public String insertFileAtFolder(String foldername, MultipartFile file);
 
     public boolean deleteFile(String filename);
+
     public String getUrl(String filename);
 
 }

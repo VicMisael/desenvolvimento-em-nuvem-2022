@@ -1,13 +1,14 @@
 package br.ufc.nuvem.patrimoniomanager.strategy;
 
-import org.springframework.web.multipart.MultipartFile;
+import br.ufc.nuvem.patrimoniomanager.model.util.FileData;
+import br.ufc.nuvem.patrimoniomanager.model.util.FileReference;
 
 
 public interface StorageStrategy {
-    public String insertFileAtFolder(String foldername, MultipartFile file);
+    FileData generateUploadLink(FileReference fileReference);
 
-    public boolean deleteFile(String filename);
+    boolean deleteFile(String filename);
 
-    public String getUrl(String filename);
+    String getUrl(String filename);
 
 }

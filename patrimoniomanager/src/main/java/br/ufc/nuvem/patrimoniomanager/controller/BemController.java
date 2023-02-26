@@ -6,15 +6,16 @@ import br.ufc.nuvem.patrimoniomanager.model.Bem;
 import br.ufc.nuvem.patrimoniomanager.model.DTO.BemDTO;
 import br.ufc.nuvem.patrimoniomanager.model.DTO.BemEditDTO;
 import br.ufc.nuvem.patrimoniomanager.model.Role;
+import br.ufc.nuvem.patrimoniomanager.model.util.FileData;
 import br.ufc.nuvem.patrimoniomanager.service.BemService;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
+import org.springframework.data.util.Pair;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,8 +45,9 @@ public class BemController {
     @CrossOrigin("*")
     @PutMapping("/addfiles")
     @ApiOperation("editar e associar arquivo a bem")
-    public ResponseEntity<Bem> insertImageBem(@RequestParam Long id, @RequestParam MultipartFile file) {
-        return new ResponseEntity<>(bemService.addFile(id, file), HttpStatus.ACCEPTED);
+    public ResponseEntity<UploadResponse> insertImageBem(@RequestBody UploadRequest uploadRequest) {
+        Pair<FileData, Bem> pair = bemService.generatePresignedUploadURL(uploadRequest.getId(), uploadRequest.getFilename());
+        return new ResponseEntity<>(UploadResponse.fromFileDataBemPair(pair), HttpStatus.ACCEPTED);
     }
 
     @GetMapping()
@@ -91,5 +93,27 @@ public class BemController {
         bemService.delete(id);
     }
 
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    private static class UploadRequest {
+        @NonNull
+        private Long id;
+        @NonNull
+        private String filename;
+    }
 
+    @Getter
+    private static class UploadResponse {
+        private UploadResponse(FileData fileData, Bem bem) {
+            this.fileData = fileData;
+            this.bem = bem;
+        }
+        private FileData fileData;
+        private Bem bem;
+
+        public static UploadResponse fromFileDataBemPair(Pair<FileData, Bem> pair) {
+            return new UploadResponse(pair.getFirst(),pair.getSecond());
+        }
+    }
 }

@@ -1,29 +1,37 @@
 package br.ufc.nuvem.patrimoniomanager.strategy;
 
+import br.ufc.nuvem.patrimoniomanager.model.util.FileData;
+import br.ufc.nuvem.patrimoniomanager.model.util.FileReference;
+import com.amazonaws.HttpMethod;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.policy.Policy;
+import com.amazonaws.auth.policy.Principal;
+import com.amazonaws.auth.policy.Resource;
+import com.amazonaws.auth.policy.Statement;
+import com.amazonaws.auth.policy.actions.S3Actions;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.util.AwsHostNameUtils;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
-import static br.ufc.nuvem.patrimoniomanager.util.BucketUtils.createPolicyJson;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
 
 @Component
-@Profile("docker")
 @Slf4j
+public final class MinIOStorageStrategy implements StorageStrategy {
 
-public class MinIOStorageStrategy implements StorageStrategy {
 
     private final String minioBucketName;
     private final AmazonS3 amazonS3interface;
@@ -51,21 +59,16 @@ public class MinIOStorageStrategy implements StorageStrategy {
         }
     }
 
+
+    @SneakyThrows
     @Override
-    public String insertFileAtFolder(String foldername, MultipartFile file) {
-
-        //Realiza a inserção do arquivo e retorna a url para salvamento no banco
-        try {
-            ObjectMetadata data = new ObjectMetadata();
-            data.setContentType(file.getContentType());
-            data.setContentLength(file.getSize());
-
-            amazonS3interface.putObject(new PutObjectRequest(minioBucketName, foldername + "/" + file.getOriginalFilename(), file.getInputStream(), data).withCannedAcl(CannedAccessControlList.PublicRead));
-            return foldername + "/" + file.getOriginalFilename();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return "";
-        }
+    public FileData generateUploadLink(FileReference fileReference) {
+        final String filename = fileReference.getFolderName() + "/" + fileReference.getFilename();
+        final String presigned = amazonS3interface.generatePresignedUrl(minioBucketName,
+                filename,
+                Date.from(Instant.now().plus(Duration.ofDays(1)))
+                , HttpMethod.PUT).toString();
+        return FileData.builder().presignedLink(presigned).filename(filename).build();
     }
 
     @Override
@@ -91,7 +94,17 @@ public class MinIOStorageStrategy implements StorageStrategy {
 
     @Override
     public String getUrl(String filename) {
-        return amazonS3interface.getUrl(minioBucketName, filename).toString().replaceAll("minio","localhost");
+        return amazonS3interface.getUrl(minioBucketName, filename).toString().replaceAll("minio", "localhost");
 
+    }
+
+    private static String createPolicyJson(String bucketName) {
+        Statement statement = new Statement(Statement.Effect.Allow)
+                .withPrincipals(Principal.AllUsers)
+                .withActions(S3Actions.GetObject)
+                .withResources(
+                        new Resource("arn:aws:s3:::" + bucketName + "/*")
+                );
+        return new Policy(UUID.randomUUID().toString(), List.of(statement)).toJson();
     }
 }

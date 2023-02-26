@@ -2,22 +2,33 @@ package br.ufc.nuvem.patrimoniomanager.service;
 
 import br.ufc.nuvem.patrimoniomanager.model.Bem;
 import br.ufc.nuvem.patrimoniomanager.model.DTO.BemEditDTO;
+import br.ufc.nuvem.patrimoniomanager.model.util.FileData;
+import br.ufc.nuvem.patrimoniomanager.repository.AppDataRepository;
 import br.ufc.nuvem.patrimoniomanager.repository.BemRepository;
-import br.ufc.nuvem.patrimoniomanager.repository.PatrimonioDataRepository;
+import br.ufc.nuvem.patrimoniomanager.repository.UsuarioRepository;
+import com.google.common.io.Files;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.util.Pair;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BemService {
     private final BemRepository bemRepository;
-    private final PatrimonioDataRepository patrimonioDataRepository;
+    private final AppDataRepository patrimonioDataRepository;
+
+    private final UsuarioRepository usuarioRepository;
+
+    private static final List<String> ALLOWED_EXTENSIONS = List.of("jpg", "jpeg", "png", "pdf");
 
     public Optional<Bem> findBemById(Long id) {
         return bemRepository.findById(id);
@@ -78,8 +89,10 @@ public class BemService {
     }
 
     public Bem save(Bem bem) {
-        Bem savedBem = bemRepository.save(bem);
-        return bemRepository.save(savedBem);
+        if (usuarioRepository.existsById(bem.getUsuario().getCodigoUsuario()))
+            return bemRepository.save(bem);
+        else
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "usuario não existe");
     }
 
     public Bem update(BemEditDTO bem) {
@@ -93,18 +106,30 @@ public class BemService {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Update without ID");
     }
 
-    public Bem addFile(Long id, MultipartFile file) {
-        Optional<Bem> bemOptional = bemRepository.findById(id);
+    public Pair<FileData, Bem> generatePresignedUploadURL(Long id, String originalFilename) {
+        final Optional<Bem> bemOptional = bemRepository.findById(id);
+        final String fileExtension = Files.getFileExtension(Objects.requireNonNull(originalFilename));
         if (bemOptional.isPresent()) {
-            Bem bem = bemOptional.get();
+            if (ALLOWED_EXTENSIONS.contains(fileExtension)) {
+                final Bem bem = bemOptional.get();
 
-            bem.setDirImagemBem(patrimonioDataRepository.insertData(bem.getUsuario().getFolderName(), file));
-            bem.setBemUrl(patrimonioDataRepository.getBemUrl(bem.getDirImagemBem()));
-            return bemRepository.save(bem);
+                final FileData fileData = patrimonioDataRepository.insertData(bem.getUsuario().getFolderName(), generateUploadFilename(bem,originalFilename));
+
+                bem.setDirImagemBem(fileData.getFilename());
+                bem.setBemUrl(patrimonioDataRepository.getBemUrl(bem.getDirImagemBem()));
+                return Pair.of(fileData, bemRepository.save(bem));
+            } else {
+                log.info("invalid file");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Extensão invalida");
+            }
 
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Update without ID");
+    }
 
+    private String generateUploadFilename(Bem bem, String originalFilename) {
+        return bem.hashCode() + Files.getNameWithoutExtension(originalFilename) + UUID.randomUUID()
+                + "." + Files.getFileExtension(originalFilename);
     }
 
 }

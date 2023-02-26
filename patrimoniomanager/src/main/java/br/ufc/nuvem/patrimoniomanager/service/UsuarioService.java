@@ -2,7 +2,6 @@ package br.ufc.nuvem.patrimoniomanager.service;
 
 import br.ufc.nuvem.patrimoniomanager.model.DTO.UsuarioEditDTO;
 import br.ufc.nuvem.patrimoniomanager.model.Usuario;
-import br.ufc.nuvem.patrimoniomanager.repository.PatrimonioDataRepository;
 import br.ufc.nuvem.patrimoniomanager.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -51,8 +51,4 @@ public class Bem {
         return idBem != null && Objects.equals(idBem, bem.idBem);
     }
 
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
 }
